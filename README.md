@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tarutung Atlas Starter
 
-## Getting Started
+Starter website kota Tarutung berbasis `Next.js 16` dengan stack:
 
-First, run the development server:
+- `pnpm`
+- `TypeScript`
+- `Tailwind CSS v4`
+- `shadcn/ui`
+- `Leaflet` + `react-leaflet`
+- `Three.js`
+- `Notion SDK`
+
+## Menjalankan project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Script lain:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm lint
+pnpm typecheck
+pnpm build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Catatan:
 
-## Learn More
+- `dev` dan `build` diset ke mode `webpack` agar stabil di environment yang membatasi Turbopack.
+- API data tersedia di `http://localhost:3000/api/places`.
 
-To learn more about Next.js, take a look at the following resources:
+## Environment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Template ada di `.env.example`. File kerja lokal ada di `.env.local`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Key yang dipakai:
 
-## Deploy on Vercel
+```bash
+NOTION_TOKEN=
+NOTION_DATA_SOURCE_ID=
+NOTION_DATABASE_ID=
+NEXT_PUBLIC_MAP_TILE_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+NEXT_PUBLIC_MAP_ATTRIBUTION=&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Catatan:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `NOTION_DATA_SOURCE_ID` adalah key utama untuk SDK Notion versi sekarang.
+- `NOTION_DATABASE_ID` tetap didukung sebagai fallback alias.
+
+## Schema Notion yang Disarankan
+
+Buat satu data source Notion dengan properti berikut:
+
+| Property | Type | Wajib | Keterangan |
+| --- | --- | --- | --- |
+| `Name` | Title | Ya | Nama tempat |
+| `Slug` | Rich text | Tidak | URL slug manual |
+| `Category` | Select | Ya | `history`, `culture`, `culinary`, `nature`, `modern` |
+| `Summary` | Rich text | Ya | Ringkasan singkat untuk card dan popup |
+| `Latitude` | Number | Ya | Koordinat marker |
+| `Longitude` | Number | Ya | Koordinat marker |
+| `Featured` | Checkbox | Tidak | Muncul di grid utama |
+| `Published` | Checkbox | Tidak | Jika `false`, item di-skip |
+| `Cluster` | Select | Tidak | Nama cluster mini-map |
+| `Order` | Number | Tidak | Urutan tampil |
+
+Jika env Notion belum diisi, aplikasi otomatis memakai fallback data dari riset Tarutung.
+
+## Struktur Inti
+
+- `src/app/page.tsx`: landing page starter
+- `src/app/api/places/route.ts`: endpoint JSON untuk place data
+- `src/lib/notion.ts`: adapter Notion server-side
+- `src/lib/tarutung-data.ts`: fallback data awal Tarutung
+- `src/components/map/tarutung-map.tsx`: peta Leaflet
+- `src/components/scene/tarutung-hero-scene.tsx`: hero scene Three.js
+- `components.json`: base config shadcn/ui
+
+## Status Setup
+
+Stack ini sudah diverifikasi dengan:
+
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`

@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-heading: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,38 +49,38 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: oklch(0.98 0.012 96.66);
+  --foreground: oklch(0.24 0.03 229.78);
+  --card: oklch(0.995 0.007 96.66);
+  --card-foreground: oklch(0.24 0.03 229.78);
+  --popover: oklch(0.995 0.007 96.66);
+  --popover-foreground: oklch(0.24 0.03 229.78);
+  --primary: oklch(0.46 0.11 185.37);
+  --primary-foreground: oklch(0.99 0.01 96.74);
+  --secondary: oklch(0.95 0.02 194.19);
+  --secondary-foreground: oklch(0.3 0.04 214.29);
+  --muted: oklch(0.94 0.015 96.89);
+  --muted-foreground: oklch(0.49 0.03 220.16);
+  --accent: oklch(0.9 0.06 119.07);
+  --accent-foreground: oklch(0.27 0.03 199.77);
+  --destructive: oklch(0.58 0.22 28.31);
+  --border: oklch(0.88 0.02 93.3);
+  --input: oklch(0.9 0.02 93.3);
+  --ring: oklch(0.46 0.11 185.37);
+  --chart-1: oklch(0.65 0.19 44.42);
+  --chart-2: oklch(0.58 0.14 171.94);
+  --chart-3: oklch(0.49 0.08 250.51);
+  --chart-4: oklch(0.76 0.17 87.41);
+  --chart-5: oklch(0.67 0.19 313.03);
+  --radius: 1.25rem;
+  --sidebar: oklch(0.995 0.007 96.66);
+  --sidebar-foreground: oklch(0.24 0.03 229.78);
+  --sidebar-primary: oklch(0.46 0.11 185.37);
+  --sidebar-primary-foreground: oklch(0.99 0.01 96.74);
+  --sidebar-accent: oklch(0.95 0.02 194.19);
+  --sidebar-accent-foreground: oklch(0.3 0.04 214.29);
+  --sidebar-border: oklch(0.88 0.02 93.3);
+  --sidebar-ring: oklch(0.46 0.11 185.37);
 }
 
 .dark {
@@ -123,8 +123,41 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(circle at top left, color-mix(in oklch, var(--accent) 22%, transparent), transparent 30%),
+      radial-gradient(circle at top right, color-mix(in oklch, var(--primary) 20%, transparent), transparent 35%),
+      linear-gradient(180deg, color-mix(in oklch, var(--secondary) 35%, transparent), transparent 25%);
   }
   html {
     @apply font-sans;
   }
+}
+
+a {
+  text-decoration: none;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: color-mix(in oklch, var(--secondary) 55%, white);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: color-mix(in oklch, var(--card) 92%, white);
+  color: var(--foreground);
+}
+
+.map-surface {
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--secondary) 65%, white), color-mix(in oklch, var(--background) 90%, white)),
+    color-mix(in oklch, var(--background) 98%, white);
+}
+
+.glass-panel {
+  background: color-mix(in oklch, var(--card) 88%, white);
+  backdrop-filter: blur(18px);
 }

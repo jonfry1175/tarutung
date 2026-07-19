@@ -72,7 +72,7 @@
   --chart-3: oklch(0.49 0.08 250.51);
   --chart-4: oklch(0.76 0.17 87.41);
   --chart-5: oklch(0.67 0.19 313.03);
-  --radius: 1.25rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.995 0.007 96.66);
   --sidebar-foreground: oklch(0.24 0.03 229.78);
   --sidebar-primary: oklch(0.46 0.11 185.37);
@@ -123,10 +123,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image:
-      radial-gradient(circle at top left, color-mix(in oklch, var(--accent) 22%, transparent), transparent 30%),
-      radial-gradient(circle at top right, color-mix(in oklch, var(--primary) 20%, transparent), transparent 35%),
-      linear-gradient(180deg, color-mix(in oklch, var(--secondary) 35%, transparent), transparent 25%);
   }
   html {
     @apply font-sans;
@@ -152,12 +148,968 @@ a {
 }
 
 .map-surface {
-  background:
-    linear-gradient(180deg, color-mix(in oklch, var(--secondary) 65%, white), color-mix(in oklch, var(--background) 90%, white)),
-    color-mix(in oklch, var(--background) 98%, white);
+  background: color-mix(in oklch, var(--background) 98%, white);
 }
 
 .glass-panel {
   background: color-mix(in oklch, var(--card) 88%, white);
   backdrop-filter: blur(18px);
+}
+
+/* Subang 360 immersive experience */
+.subang360-shell {
+  --subang-gold: #d2ae66;
+  --subang-ink: #0c1514;
+  --subang-paper: #f6f2e9;
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #09110f;
+  color: #f8f3e9;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.subang360-shell button,
+.subang360-shell a {
+  letter-spacing: 0;
+}
+
+.subang360-sidebar {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  border-right: 1px solid rgba(210, 174, 102, 0.34);
+  background: rgba(8, 16, 16, 0.97);
+  box-shadow: 12px 0 28px rgba(0, 0, 0, 0.18);
+}
+
+.subang360-logo {
+  display: flex;
+  height: 118px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--subang-gold);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 0.9;
+}
+
+.subang360-logo-icon {
+  width: 39px;
+  height: 39px;
+  margin-bottom: 9px;
+  stroke-width: 1.25;
+}
+
+.subang360-logo span:first-of-type {
+  font-size: 15px;
+}
+
+.subang360-logo span:last-of-type {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.subang360-nav {
+  display: grid;
+  gap: 5px;
+  padding: 0 10px;
+}
+
+.subang360-nav button {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: rgba(255, 255, 255, 0.78);
+  background: transparent;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.subang360-nav button svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  stroke-width: 1.6;
+}
+
+.subang360-nav button:hover,
+.subang360-nav button:focus-visible,
+.subang360-nav button.is-active {
+  border-color: rgba(210, 174, 102, 0.12);
+  background: #1c2923;
+  color: #fff;
+}
+
+.subang360-nav button.is-active svg {
+  color: #ead9b6;
+}
+
+.subang360-nav-secondary {
+  margin: 18px 12px 0;
+  padding: 14px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.subang360-progress {
+  margin-top: auto;
+  padding: 16px 16px 18px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+}
+
+.subang360-progress-copy {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.subang360-progress-copy strong {
+  display: block;
+  color: #f4e7c8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.subang360-progress-star {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  place-items: center;
+  border: 2px solid rgba(210, 174, 102, 0.45);
+  border-radius: 50%;
+  color: #ead9b6;
+}
+
+.subang360-progress-star svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.subang360-progress-track {
+  display: block;
+  height: 6px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.subang360-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #d7bd87;
+  transition: width 240ms ease;
+}
+
+.subang360-stage {
+  position: relative;
+  min-width: 0;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.subang360-stage > div:first-child {
+  position: absolute;
+  inset: 0;
+}
+
+.subang360-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(4, 10, 10, 0.08);
+  box-shadow: inset 0 140px 120px rgba(0, 0, 0, 0.25), inset 0 -100px 100px rgba(0, 0, 0, 0.22);
+}
+
+.subang360-title-block {
+  position: absolute;
+  z-index: 4;
+  top: 40px;
+  left: 50%;
+  width: min(620px, 60vw);
+  color: #f6f1e7;
+  text-align: center;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.subang360-title-block h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(42px, 4.1vw, 66px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.subang360-title-block p {
+  margin-top: 13px;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.subang360-title-block > span {
+  display: block;
+  margin-top: 8px;
+  color: rgba(238, 216, 172, 0.72);
+  font-size: 20px;
+}
+
+.subang360-top-controls,
+.subang360-mobile-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.subang360-top-controls {
+  position: absolute;
+  z-index: 12;
+  top: 34px;
+  right: 34px;
+}
+
+.subang360-top-controls button,
+.subang360-mobile-actions button {
+  display: flex;
+  height: 54px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid rgba(223, 196, 142, 0.52);
+  border-radius: 8px;
+  background: rgba(13, 18, 18, 0.78);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+}
+
+.subang360-top-controls button:first-child {
+  min-width: 128px;
+  padding: 0 18px;
+  font-size: 17px;
+}
+
+.subang360-top-controls button:last-child {
+  width: 68px;
+}
+
+.subang360-top-controls svg {
+  width: 22px;
+  height: 22px;
+}
+
+.subang360-top-controls button:first-child svg:last-child {
+  width: 16px;
+}
+
+.subang360-mode-label {
+  position: absolute;
+  z-index: 8;
+  top: 26px;
+  left: 24px;
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(9, 17, 16, 0.66);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 12px;
+  backdrop-filter: blur(12px);
+}
+
+.subang360-mode-label svg {
+  width: 15px;
+}
+
+.subang360-mode-label strong {
+  color: #f0dcae;
+}
+
+.subang360-hotspots {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  pointer-events: none;
+}
+
+.subang360-hotspot {
+  position: absolute;
+  top: var(--hotspot-y);
+  left: var(--hotspot-x);
+  display: flex;
+  height: 48px;
+  align-items: center;
+  border: 0;
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  transform: translate(-24px, -24px);
+  cursor: pointer;
+  pointer-events: auto;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.46));
+}
+
+.subang360-hotspot-icon {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.94);
+  border-radius: 50%;
+  background: var(--hotspot-color);
+  transition: transform 160ms ease;
+}
+
+.subang360-hotspot-icon svg {
+  width: 23px;
+  height: 23px;
+  stroke-width: 1.8;
+}
+
+.subang360-hotspot-label {
+  max-width: 210px;
+  overflow: hidden;
+  margin-left: -5px;
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  border-left: 0;
+  border-radius: 0 8px 8px 0;
+  padding: 8px 14px 8px 15px;
+  background: color-mix(in srgb, var(--hotspot-color) 70%, rgba(10, 15, 14, 0.7));
+  font-size: 14px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subang360-hotspot-stem {
+  position: absolute;
+  top: 47px;
+  left: 23px;
+  width: 2px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.subang360-hotspot-stem::after {
+  position: absolute;
+  bottom: -3px;
+  left: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+}
+
+.subang360-hotspot:hover .subang360-hotspot-icon,
+.subang360-hotspot:focus-visible .subang360-hotspot-icon,
+.subang360-hotspot.is-active .subang360-hotspot-icon {
+  transform: scale(1.12);
+}
+
+.subang360-hotspot:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid #fff;
+  outline-offset: 5px;
+}
+
+.subang360-instructions {
+  position: absolute;
+  z-index: 10;
+  bottom: 22px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(231, 211, 172, 0.45);
+  border-radius: 999px;
+  padding: 0 7px;
+  background: rgba(8, 14, 14, 0.78);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  transform: translateX(-50%);
+  backdrop-filter: blur(14px);
+}
+
+.subang360-instructions span {
+  display: flex;
+  height: 42px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  white-space: nowrap;
+}
+
+.subang360-instructions span + span {
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.subang360-instructions svg {
+  width: 18px;
+  height: 18px;
+  color: #f1e2c3;
+}
+
+.subang360-view-controls {
+  position: absolute;
+  z-index: 10;
+  right: 22px;
+  bottom: 22px;
+  display: grid;
+  gap: 10px;
+}
+
+.subang360-view-controls button {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid rgba(222, 195, 143, 0.48);
+  border-radius: 8px;
+  background: rgba(7, 15, 15, 0.78);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+
+.subang360-view-controls button:hover,
+.subang360-view-controls button:focus-visible,
+.subang360-top-controls button:hover,
+.subang360-top-controls button:focus-visible {
+  border-color: #ead6ac;
+  background: rgba(20, 31, 27, 0.94);
+}
+
+.subang360-view-controls svg {
+  width: 22px;
+  height: 22px;
+}
+
+.subang360-empty {
+  position: absolute;
+  z-index: 9;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 22px;
+  background: rgba(8, 16, 15, 0.86);
+  text-align: center;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(16px);
+}
+
+.subang360-empty > svg {
+  width: 26px;
+  margin: 0 auto 10px;
+  color: #e5ca94;
+}
+
+.subang360-empty button {
+  margin-top: 14px;
+  border: 1px solid #cdb27b;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #102019;
+  background: #ead9b6;
+  cursor: pointer;
+}
+
+.subang360-detail {
+  position: absolute;
+  z-index: 20;
+  top: 108px;
+  right: 92px;
+  display: grid;
+  width: min(410px, calc(100% - 130px));
+  max-height: calc(100dvh - 150px);
+  grid-template-rows: 210px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(227, 207, 168, 0.68);
+  border-radius: 8px;
+  background: #f5f1e8;
+  color: #1c2924;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
+  animation: subang-detail-in 220ms ease-out;
+}
+
+@keyframes subang-detail-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.subang360-detail-image {
+  position: relative;
+  overflow: hidden;
+  background: #19241f;
+}
+
+.subang360-detail-image img {
+  object-fit: cover;
+}
+
+.subang360-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  color: #fff;
+  background: rgba(9, 15, 13, 0.72);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+
+.subang360-detail-close svg {
+  width: 20px;
+}
+
+.subang360-detail-body {
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.subang360-sheet-handle {
+  display: none;
+}
+
+.subang360-detail-heading {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 12px;
+}
+
+.subang360-detail-category {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.subang360-detail-category svg {
+  width: 20px;
+}
+
+.subang360-detail-heading p {
+  color: #6d766f;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.subang360-detail-heading h2 {
+  margin-top: 2px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.subang360-detail-heading > button {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #294036;
+  background: transparent;
+  cursor: pointer;
+}
+
+.subang360-detail-heading > button.is-active {
+  color: #a6403a;
+}
+
+.subang360-detail-summary {
+  margin-top: 14px;
+  color: #4b5851;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.subang360-detail-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 12px;
+  color: #68736c;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.subang360-detail-location svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.subang360-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 13px;
+}
+
+.subang360-tags span {
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #e0e4dc;
+  color: #516057;
+  font-size: 10px;
+}
+
+.subang360-detail-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.subang360-detail-actions button,
+.subang360-detail-actions a {
+  display: flex;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.subang360-detail-actions button {
+  border: 1px solid #d4c19f;
+  background: #e9dec9;
+  color: #28352f;
+}
+
+.subang360-detail-actions button.is-saved {
+  border-color: #8ba18f;
+  background: #dbe5dc;
+}
+
+.subang360-detail-actions a {
+  border: 1px solid #173327;
+  background: #173327;
+  color: #fff;
+}
+
+.subang360-detail-actions svg {
+  width: 17px;
+  height: 17px;
+}
+
+.subang360-mobile-header,
+.subang360-category-dock {
+  display: none;
+}
+
+@media (max-width: 859px) {
+  .subang360-shell {
+    display: block;
+  }
+
+  .subang360-sidebar,
+  .subang360-top-controls,
+  .subang360-instructions,
+  .subang360-mode-label {
+    display: none;
+  }
+
+  .subang360-stage {
+    width: 100%;
+  }
+
+  .subang360-shade {
+    background: rgba(4, 10, 10, 0.12);
+    box-shadow: inset 0 110px 90px rgba(0, 0, 0, 0.32), inset 0 -130px 100px rgba(0, 0, 0, 0.3);
+  }
+
+  .subang360-mobile-header {
+    position: absolute;
+    z-index: 14;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    height: 74px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+  }
+
+  .subang360-logo.is-compact {
+    width: auto;
+    height: 54px;
+    align-items: flex-start;
+    padding-left: 4px;
+    line-height: 0.85;
+    text-shadow: 0 2px 8px #000;
+  }
+
+  .subang360-logo.is-compact .subang360-logo-icon {
+    display: none;
+  }
+
+  .subang360-logo.is-compact span:first-of-type {
+    font-size: 18px;
+  }
+
+  .subang360-logo.is-compact span:last-of-type {
+    font-size: 13px;
+  }
+
+  .subang360-mobile-actions {
+    gap: 8px;
+  }
+
+  .subang360-mobile-actions button {
+    height: 40px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .subang360-mobile-actions button:last-child {
+    width: 40px;
+    padding: 0;
+  }
+
+  .subang360-mobile-actions svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .subang360-title-block {
+    top: 92px;
+    width: calc(100% - 40px);
+  }
+
+  .subang360-title-block h1 {
+    font-size: 38px;
+  }
+
+  .subang360-title-block p {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .subang360-title-block > span {
+    margin-top: 5px;
+    font-size: 15px;
+  }
+
+  .subang360-hotspot {
+    transform: translate(-20px, -20px);
+  }
+
+  .subang360-hotspot-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .subang360-hotspot-icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .subang360-hotspot-label,
+  .subang360-hotspot-stem {
+    display: none;
+  }
+
+  .subang360-view-controls {
+    top: 86px;
+    right: 13px;
+    bottom: auto;
+    gap: 7px;
+  }
+
+  .subang360-view-controls button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .subang360-view-controls button:nth-child(2),
+  .subang360-view-controls button:nth-child(3) {
+    display: none;
+  }
+
+  .subang360-category-dock {
+    position: absolute;
+    z-index: 15;
+    right: 10px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    height: 64px;
+    border: 1px solid rgba(231, 216, 187, 0.52);
+    border-radius: 8px;
+    padding: 4px;
+    background: rgba(8, 16, 15, 0.88);
+    backdrop-filter: blur(16px);
+    transition: opacity 160ms ease;
+  }
+
+  .subang360-category-dock button {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 0;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.62);
+    background: transparent;
+    font-size: 9px;
+    cursor: pointer;
+  }
+
+  .subang360-category-dock button svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .subang360-category-dock button.is-active {
+    color: #f2dfb8;
+    background: #213028;
+  }
+
+  .subang360-stage:has(.subang360-detail) .subang360-category-dock {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .subang360-detail {
+    top: auto;
+    right: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 8px;
+    display: block;
+    width: auto;
+    max-height: min(62dvh, 510px);
+    border-color: rgba(255, 255, 255, 0.72);
+    border-radius: 8px;
+    animation-name: subang-sheet-in;
+  }
+
+  @keyframes subang-sheet-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .subang360-detail-image {
+    display: none;
+  }
+
+  .subang360-detail-body {
+    max-height: min(62dvh, 510px);
+    padding: 9px 15px 15px;
+  }
+
+  .subang360-sheet-handle {
+    display: block;
+    width: 38px;
+    height: 4px;
+    margin: 0 auto 11px;
+    border-radius: 999px;
+    background: #8d948f;
+  }
+
+  .subang360-detail-heading {
+    grid-template-columns: 38px minmax(0, 1fr) 38px;
+    gap: 10px;
+  }
+
+  .subang360-detail-category {
+    width: 38px;
+    height: 38px;
+  }
+
+  .subang360-detail-heading h2 {
+    font-size: 22px;
+  }
+
+  .subang360-detail-summary {
+    display: -webkit-box;
+    overflow: hidden;
+    margin-top: 10px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .subang360-detail-location {
+    display: none;
+  }
+
+  .subang360-tags {
+    margin-top: 9px;
+  }
+
+  .subang360-detail-actions {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 430px) {
+  .subang360-title-block {
+    top: 86px;
+  }
+
+  .subang360-title-block h1 {
+    font-size: 32px;
+  }
+
+  .subang360-title-block p {
+    font-size: 12px;
+  }
+
+  .subang360-hotspot:nth-child(even) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subang360-shell *,
+  .subang360-shell *::before,
+  .subang360-shell *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

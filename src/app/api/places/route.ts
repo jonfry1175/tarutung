@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { getPlaces } from "@/lib/notion";
+import { subangPlaces } from "@/lib/subang-data";
 
-export async function GET() {
-  const payload = await getPlaces();
-
-  return NextResponse.json(payload);
+export function GET() {
+  return NextResponse.json({
+    places: subangPlaces,
+    source: "curated" as const,
+  });
 }

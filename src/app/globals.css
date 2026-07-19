@@ -330,6 +330,36 @@ a {
   inset: 0;
 }
 
+.subang360-video-stage {
+  overflow: hidden;
+  background: #07100e;
+}
+
+.subang360-video-plane {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+  background: #07100e;
+  background-position: center;
+  background-size: cover;
+  transform: translate(-50%, -50%);
+}
+
+.subang360-video-plane video {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 1;
+}
+
+.subang360-video-plane video.is-ready {
+  opacity: 1;
+}
+
 .subang360-shade {
   position: absolute;
   z-index: 1;
@@ -538,7 +568,7 @@ a {
   outline-offset: 5px;
 }
 
-.subang360-instructions {
+.subang360-chapters {
   position: absolute;
   z-index: 10;
   bottom: 22px;
@@ -547,31 +577,45 @@ a {
   align-items: center;
   border: 1px solid rgba(231, 211, 172, 0.45);
   border-radius: 999px;
-  padding: 0 7px;
+  padding: 5px;
   background: rgba(8, 14, 14, 0.78);
   color: rgba(255, 255, 255, 0.78);
-  font-size: 11px;
   transform: translateX(-50%);
   backdrop-filter: blur(14px);
 }
 
-.subang360-instructions span {
-  display: flex;
-  height: 42px;
+.subang360-chapters button {
+  display: grid;
+  height: 40px;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 8px;
-  padding: 0 18px;
+  gap: 7px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 13px;
+  color: rgba(255, 255, 255, 0.62);
+  background: transparent;
+  cursor: pointer;
   white-space: nowrap;
+  transition: color 160ms ease, background-color 160ms ease;
 }
 
-.subang360-instructions span + span {
-  border-left: 1px solid rgba(255, 255, 255, 0.25);
+.subang360-chapters button:hover,
+.subang360-chapters button:focus-visible,
+.subang360-chapters button.is-active {
+  color: #fff;
+  background: rgba(49, 70, 59, 0.92);
 }
 
-.subang360-instructions svg {
-  width: 18px;
-  height: 18px;
-  color: #f1e2c3;
+.subang360-chapters button span {
+  color: #d8bc84;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.subang360-chapters button strong {
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .subang360-view-controls {
@@ -844,7 +888,6 @@ a {
 
   .subang360-sidebar,
   .subang360-top-controls,
-  .subang360-instructions,
   .subang360-mode-label {
     display: none;
   }
@@ -963,8 +1006,35 @@ a {
   }
 
   .subang360-view-controls button:nth-child(2),
-  .subang360-view-controls button:nth-child(3) {
+  .subang360-view-controls button:nth-child(4) {
     display: none;
+  }
+
+  .subang360-chapters {
+    right: 10px;
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 72px);
+    left: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 4px;
+    border-radius: 8px;
+    transform: none;
+  }
+
+  .subang360-chapters button {
+    display: flex;
+    min-width: 0;
+    height: 38px;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 6px;
+    padding: 0 4px;
+  }
+
+  .subang360-chapters button strong {
+    overflow: hidden;
+    font-size: 9px;
+    text-overflow: ellipsis;
   }
 
   .subang360-category-dock {
@@ -1010,6 +1080,11 @@ a {
   }
 
   .subang360-stage:has(.subang360-detail) .subang360-category-dock {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .subang360-stage:has(.subang360-detail) .subang360-chapters {
     opacity: 0;
     pointer-events: none;
   }
@@ -1111,5 +1186,181 @@ a {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+.subang360-auth-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(5, 10, 9, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.subang360-auth-dialog {
+  position: relative;
+  width: min(100%, 410px);
+  border: 1px solid rgba(213, 185, 128, 0.58);
+  border-radius: 8px;
+  padding: 34px 32px 30px;
+  color: #17251f;
+  background: #f7f4ed;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+  text-align: center;
+}
+
+.subang360-auth-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  color: #526058;
+  background: transparent;
+  cursor: pointer;
+}
+
+.subang360-auth-close svg {
+  width: 19px;
+  height: 19px;
+}
+
+.subang360-auth-mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 18px;
+  place-items: center;
+  border-radius: 50%;
+  color: #f1dfbb;
+  background: #20372c;
+}
+
+.subang360-auth-mark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.subang360-auth-dialog h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.subang360-auth-dialog > p {
+  margin: 10px auto 22px;
+  color: #5e6862;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.subang360-google-button {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  border: 1px solid #c9ccc9;
+  border-radius: 6px;
+  color: #1d2923;
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.subang360-google-button:hover {
+  border-color: #8e9a93;
+  background: #fafafa;
+}
+
+.subang360-google-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.subang360-google-button > span {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 1px solid #d8d8d8;
+  border-radius: 50%;
+  color: #4285f4;
+  font: 700 14px Arial, sans-serif;
+}
+
+.subang360-auth-dialog .subang360-auth-error {
+  margin: 12px 0 0;
+  color: #a33a2a;
+  font-size: 12px;
+}
+
+.subang360-feedback {
+  position: fixed;
+  z-index: 90;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  max-width: min(420px, calc(100vw - 40px));
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(232, 214, 176, 0.45);
+  border-radius: 7px;
+  padding: 12px 12px 12px 16px;
+  color: #f5efe2;
+  background: rgba(17, 28, 24, 0.96);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+}
+
+.subang360-feedback button {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.subang360-feedback svg {
+  width: 16px;
+  height: 16px;
+}
+
+.subang360-spin {
+  animation: subang360-spin 800ms linear infinite;
+}
+
+@keyframes subang360-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 560px) {
+  .subang360-auth-dialog {
+    padding: 31px 22px 24px;
+  }
+
+  .subang360-auth-dialog h2 {
+    font-size: 25px;
+  }
+
+  .subang360-feedback {
+    right: 12px;
+    bottom: 86px;
+    left: 12px;
+    max-width: none;
   }
 }

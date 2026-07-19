@@ -1,300 +1,168 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const PANORAMA_URL = "/images/subang/hero-panorama.png";
-const IMAGE_WIDTH = 16;
-const IMAGE_HEIGHT = 9;
-const MIN_ZOOM = 1;
-const MAX_ZOOM = 1.55;
+import type { SubangScene } from "@/lib/subang-data";
+
+const VIDEO_ASPECT_RATIO = 16 / 9;
 
 export interface Subang360SceneProps {
-  zoomSignal?: number;
-  resetSignal?: number;
+  scene: SubangScene;
+  muted: boolean;
+  paused: boolean;
+  restartSignal: number;
+  children?: ReactNode;
+  onPlaybackTimeChange?: (time: number) => void;
 }
 
-interface SceneControls {
-  reset: () => void;
-  zoom: (direction: number) => void;
-}
-
-export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps) {
+export function Subang360Scene({
+  scene,
+  muted,
+  paused,
+  restartSignal,
+  children,
+  onPlaybackTimeChange,
+}: Subang360SceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const posterRef = useRef<HTMLImageElement>(null);
-  const controlsRef = useRef<SceneControls | null>(null);
-  const previousZoomSignalRef = useRef(zoomSignal);
-  const previousResetSignalRef = useRef(resetSignal);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const previousRestartSignalRef = useRef(restartSignal);
+  const [planeSize, setPlaneSize] = useState({
+    width: 0,
+    height: 0,
+    offsetX: 0,
+  });
+  const [readySceneId, setReadySceneId] = useState<string | null>(null);
+  const ready = readySceneId === scene.id;
 
   useEffect(() => {
     const container = containerRef.current;
-    const poster = posterRef.current;
     if (!container) return;
-
-    delete container.dataset.sceneReady;
-    poster?.classList.remove("opacity-0");
-
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let reducedMotion = motionQuery.matches;
-    let disposed = false;
-    let frameId = 0;
-    let renderer: THREE.WebGLRenderer;
-
-    try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    } catch {
-      return;
-    }
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-8, 8, 4.5, -4.5, 0.1, 10);
-    camera.position.z = 3;
-
-    const canvas = renderer.domElement;
-    canvas.className = "absolute inset-0 h-full w-full opacity-0 transition-opacity duration-500";
-    canvas.style.touchAction = "none";
-    canvas.style.cursor = "grab";
-    canvas.setAttribute("aria-hidden", "true");
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    container.appendChild(canvas);
-
-    let baseViewHeight = IMAGE_HEIGHT;
-    let aspect = 16 / 9;
-    let zoom = 1;
-    let targetZoom = 1;
-    let panX = 0;
-    let panY = 0;
-    let targetPanX = 0;
-    let targetPanY = 0;
-    let textureReady = false;
-    let activePointerId: number | null = null;
-    let lastPointerX = 0;
-    let lastPointerY = 0;
-    let panorama: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> | null = null;
-    let texture: THREE.Texture | null = null;
-
-    const clampPan = () => {
-      const viewHeight = baseViewHeight / targetZoom;
-      const viewWidth = viewHeight * aspect;
-      const maxX = Math.max(0, (IMAGE_WIDTH - viewWidth) / 2);
-      const maxY = Math.max(0, (IMAGE_HEIGHT - viewHeight) / 2);
-      targetPanX = THREE.MathUtils.clamp(targetPanX, -maxX, maxX);
-      targetPanY = THREE.MathUtils.clamp(targetPanY, -maxY, maxY);
-    };
-
-    const updateCamera = () => {
-      const viewHeight = baseViewHeight / zoom;
-      const viewWidth = viewHeight * aspect;
-      camera.left = -viewWidth / 2;
-      camera.right = viewWidth / 2;
-      camera.top = viewHeight / 2;
-      camera.bottom = -viewHeight / 2;
-      camera.position.x = panX;
-      camera.position.y = panY;
-      camera.updateProjectionMatrix();
-    };
-
-    const render = () => {
-      if (!textureReady || document.hidden || disposed) return;
-      updateCamera();
-      renderer.render(scene, camera);
-    };
-
-    const animate = () => {
-      frameId = 0;
-      if (document.hidden || disposed) return;
-      zoom += (targetZoom - zoom) * 0.16;
-      panX += (targetPanX - panX) * 0.16;
-      panY += (targetPanY - panY) * 0.16;
-      render();
-      if (
-        Math.abs(targetZoom - zoom) > 0.001 ||
-        Math.abs(targetPanX - panX) > 0.001 ||
-        Math.abs(targetPanY - panY) > 0.001
-      ) {
-        frameId = window.requestAnimationFrame(animate);
-      }
-    };
-
-    const requestRender = () => {
-      if (reducedMotion) {
-        zoom = targetZoom;
-        panX = targetPanX;
-        panY = targetPanY;
-        render();
-      } else if (!frameId && !document.hidden) {
-        frameId = window.requestAnimationFrame(animate);
-      }
-    };
 
     const resize = () => {
       const width = container.clientWidth;
       const height = container.clientHeight;
       if (!width || !height) return;
-      aspect = width / height;
-      baseViewHeight = aspect > IMAGE_WIDTH / IMAGE_HEIGHT
-        ? IMAGE_WIDTH / aspect
-        : IMAGE_HEIGHT;
-      renderer.setSize(width, height, false);
-      clampPan();
-      requestRender();
-    };
 
-    const zoomBy = (direction: number) => {
-      if (!direction) return;
-      targetZoom = THREE.MathUtils.clamp(
-        targetZoom + Math.sign(direction) * 0.12,
-        MIN_ZOOM,
-        MAX_ZOOM,
+      const planeWidth = width / height > VIDEO_ASPECT_RATIO
+        ? width
+        : height * VIDEO_ASPECT_RATIO;
+      const planeHeight = width / height > VIDEO_ASPECT_RATIO
+        ? width / VIDEO_ASPECT_RATIO
+        : height;
+      const centeredLeft = (width - planeWidth) / 2;
+      const desiredLeft = Math.min(
+        0,
+        Math.max(
+          width - planeWidth,
+          width * 0.62 - planeWidth * (scene.mobileFocusX / 100),
+        ),
       );
-      clampPan();
-      requestRender();
+
+      setPlaneSize({
+        width: planeWidth,
+        height: planeHeight,
+        offsetX: width <= 859 ? desiredLeft - centeredLeft : 0,
+      });
     };
 
-    const reset = () => {
-      targetZoom = 1;
-      targetPanX = 0;
-      targetPanY = 0;
-      requestRender();
-    };
-
-    controlsRef.current = { reset, zoom: zoomBy };
-
-    const handlePointerDown = (event: PointerEvent) => {
-      activePointerId = event.pointerId;
-      lastPointerX = event.clientX;
-      lastPointerY = event.clientY;
-      canvas.setPointerCapture(event.pointerId);
-      canvas.style.cursor = "grabbing";
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerId !== activePointerId) return;
-      const viewHeight = baseViewHeight / targetZoom;
-      const viewWidth = viewHeight * aspect;
-      targetPanX -= ((event.clientX - lastPointerX) / container.clientWidth) * viewWidth;
-      targetPanY += ((event.clientY - lastPointerY) / container.clientHeight) * viewHeight;
-      lastPointerX = event.clientX;
-      lastPointerY = event.clientY;
-      clampPan();
-      requestRender();
-    };
-
-    const releasePointer = (event: PointerEvent) => {
-      if (event.pointerId !== activePointerId) return;
-      activePointerId = null;
-      canvas.style.cursor = "grab";
-      if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
-    };
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      zoomBy(-event.deltaY);
-    };
-
-    const handleVisibility = () => {
-      if (document.hidden) {
-        window.cancelAnimationFrame(frameId);
-        frameId = 0;
-      } else {
-        requestRender();
-      }
-    };
-
-    const handleMotion = (event: MediaQueryListEvent) => {
-      reducedMotion = event.matches;
-      requestRender();
-    };
-
-    canvas.addEventListener("pointerdown", handlePointerDown);
-    canvas.addEventListener("pointermove", handlePointerMove);
-    canvas.addEventListener("pointerup", releasePointer);
-    canvas.addEventListener("pointercancel", releasePointer);
-    canvas.addEventListener("wheel", handleWheel, { passive: false });
-    document.addEventListener("visibilitychange", handleVisibility);
-    motionQuery.addEventListener("change", handleMotion);
-
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(container);
+    const observer = new ResizeObserver(resize);
+    observer.observe(container);
     resize();
+    return () => observer.disconnect();
+  }, [scene.mobileFocusX]);
 
-    new THREE.TextureLoader().load(
-      PANORAMA_URL,
-      (loadedTexture) => {
-        if (disposed) {
-          loadedTexture.dispose();
-          return;
-        }
-        texture = loadedTexture;
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.minFilter = THREE.LinearFilter;
-        const geometry = new THREE.PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT, 32, 18);
-        const material = new THREE.MeshBasicMaterial({ map: texture });
-        panorama = new THREE.Mesh(geometry, material);
-        scene.add(panorama);
-        textureReady = true;
-        render();
-        canvas.classList.remove("opacity-0");
-        poster?.classList.add("opacity-0");
-        container.dataset.sceneReady = "true";
-      },
-    );
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = muted;
+
+    if (paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      video.pause();
+    } else {
+      void video.play().catch(() => {
+        video.muted = true;
+        void video.play().catch(() => undefined);
+      });
+    }
+  }, [muted, paused, ready, scene.id]);
+
+  useEffect(() => {
+    if (restartSignal === previousRestartSignalRef.current) return;
+    previousRestartSignalRef.current = restartSignal;
+    const video = videoRef.current;
+    if (!video) return;
+    video.currentTime = 0;
+    onPlaybackTimeChange?.(0);
+    if (!paused) void video.play().catch(() => undefined);
+  }, [onPlaybackTimeChange, paused, restartSignal]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !onPlaybackTimeChange) return;
+
+    let frameHandle = 0;
+    let animationHandle = 0;
+    let lastReportedAt = -1;
+    let disposed = false;
+
+    const report = (time: number) => {
+      if (Math.abs(time - lastReportedAt) < 1 / 15 && time >= lastReportedAt) return;
+      lastReportedAt = time;
+      onPlaybackTimeChange(time);
+    };
+
+    if (typeof video.requestVideoFrameCallback === "function") {
+      const onFrame = (_now: number, metadata: VideoFrameCallbackMetadata) => {
+        if (disposed) return;
+        report(metadata.mediaTime);
+        if (!disposed) frameHandle = video.requestVideoFrameCallback(onFrame);
+      };
+      frameHandle = video.requestVideoFrameCallback(onFrame);
+    } else {
+      const onFrame = () => {
+        if (disposed) return;
+        report(video.currentTime);
+        if (!disposed) animationHandle = window.requestAnimationFrame(onFrame);
+      };
+      animationHandle = window.requestAnimationFrame(onFrame);
+    }
 
     return () => {
       disposed = true;
-      controlsRef.current = null;
-      window.cancelAnimationFrame(frameId);
-      resizeObserver.disconnect();
-      canvas.removeEventListener("pointerdown", handlePointerDown);
-      canvas.removeEventListener("pointermove", handlePointerMove);
-      canvas.removeEventListener("pointerup", releasePointer);
-      canvas.removeEventListener("pointercancel", releasePointer);
-      canvas.removeEventListener("wheel", handleWheel);
-      document.removeEventListener("visibilitychange", handleVisibility);
-      motionQuery.removeEventListener("change", handleMotion);
-      if (panorama) {
-        scene.remove(panorama);
-        panorama.geometry.dispose();
-        panorama.material.dispose();
-      }
-      texture?.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
-      canvas.remove();
-      poster?.classList.remove("opacity-0");
-      delete container.dataset.sceneReady;
+      if (frameHandle) video.cancelVideoFrameCallback(frameHandle);
+      if (animationHandle) window.cancelAnimationFrame(animationHandle);
     };
-  }, []);
-
-  useEffect(() => {
-    if (zoomSignal !== undefined && zoomSignal !== previousZoomSignalRef.current) {
-      const previous = previousZoomSignalRef.current ?? 0;
-      controlsRef.current?.zoom(zoomSignal - previous);
-    }
-    previousZoomSignalRef.current = zoomSignal;
-  }, [zoomSignal]);
-
-  useEffect(() => {
-    if (resetSignal !== undefined && resetSignal !== previousResetSignalRef.current) {
-      controlsRef.current?.reset();
-    }
-    previousResetSignalRef.current = resetSignal;
-  }, [resetSignal]);
+  }, [onPlaybackTimeChange, scene.id]);
 
   return (
-    <div ref={containerRef} className="relative h-full w-full overflow-hidden bg-black">
-      <Image
-        ref={posterRef}
-        src={PANORAMA_URL}
-        alt="Panorama Subang"
-        fill
-        sizes="100vw"
-        priority
-        draggable={false}
-        className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
-      />
+    <div ref={containerRef} className="subang360-video-stage">
+      <div
+        className="subang360-video-plane"
+        style={{
+          width: planeSize.width,
+          height: planeSize.height,
+          backgroundImage: `url(${scene.poster})`,
+          transform: `translate(calc(-50% + ${planeSize.offsetX}px), -50%)`,
+        }}
+      >
+        <video
+          ref={videoRef}
+          key={scene.id}
+          className={ready ? "is-ready" : undefined}
+          poster={scene.poster}
+          autoPlay
+          loop
+          muted={muted}
+          playsInline
+          preload="auto"
+          aria-label={`Video suasana ${scene.label}`}
+          onCanPlay={() => setReadySceneId(scene.id)}
+        >
+          <source src={scene.video} type="video/mp4" />
+        </video>
+        {children}
+      </div>
     </div>
   );
 }

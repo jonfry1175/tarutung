@@ -1,10 +1,31 @@
 export type SubangCategory = "wisata" | "kuliner" | "budaya";
+export type SubangSceneId = "ciater" | "curug" | "sisingaan" | "pineapple" | "coast";
+
+export interface MarkerKeyframe {
+  time: number;
+  x: number;
+  y: number;
+}
+
+export interface SubangScene {
+  id: SubangSceneId;
+  label: string;
+  shortLabel: string;
+  subtitle: string;
+  category: SubangCategory;
+  video: string;
+  poster: string;
+  duration: number;
+  mobileFocusX: number;
+}
 
 export interface SubangPlace {
   id: string;
   title: string;
   label?: string;
   category: SubangCategory;
+  sceneId: SubangSceneId;
+  markerTrack: MarkerKeyframe[];
   summary: string;
   description: string;
   image: string;
@@ -12,10 +33,7 @@ export interface SubangPlace {
   tags: string[];
   location: string;
   mapsUrl: string;
-  position: {
-    x: number;
-    y: number;
-  };
+  sourceUrl?: string;
   featured: boolean;
 }
 
@@ -28,158 +46,241 @@ export const categoryMeta: Record<
   budaya: { label: "Budaya", color: "#9b3f65" },
 };
 
-export const subangPlaces: SubangPlace[] = [
+export const subangScenes: SubangScene[] = [
   {
-    id: "tangkuban-parahu",
-    title: "Gunung Tangkuban Parahu",
+    id: "ciater",
+    label: "Kebun Teh Ciater",
+    shortLabel: "Ciater",
+    subtitle: "Kabut di dataran tinggi",
     category: "wisata",
-    summary:
-      "Bentang kawah vulkanik ikonik di perbatasan selatan Subang dengan udara pegunungan yang sejuk.",
-    description:
-      "Kawasan Tangkuban Parahu menawarkan panorama Kawah Ratu, jalur pandang pegunungan, dan cerita rakyat Sangkuriang. Akses dari arah Subang melewati koridor perkebunan teh dan Ciater.",
-    image: "/images/subang/hero-panorama.png",
-    gallery: [
-      "/images/subang/hero-panorama.png",
-      "/images/subang/ciater-waterfall.png",
-    ],
-    tags: ["Kawah", "Pegunungan", "Panorama"],
-    location: "Cikole, Kecamatan Lembang, perbatasan Subang",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunung+Tangkuban+Parahu",
-    position: { x: 18, y: 26 },
-    featured: false,
+    video: "/videos/subang/ciater-tea-plantation.mp4",
+    poster: "/images/subang/video-posters/ciater-tea-plantation.webp",
+    duration: 8,
+    mobileFocusX: 68,
   },
   {
-    id: "sari-ater-ciater",
-    title: "Pemandian Air Panas Ciater",
+    id: "curug",
+    label: "Curug Cileat",
+    shortLabel: "Cileat",
+    subtitle: "Air terjun di jantung hutan",
+    category: "wisata",
+    video: "/videos/subang/curug-cileat-waterfall.mp4",
+    poster: "/images/subang/video-posters/curug-cileat-waterfall.webp",
+    duration: 8,
+    mobileFocusX: 62,
+  },
+  {
+    id: "sisingaan",
+    label: "Sisingaan",
+    shortLabel: "Sisingaan",
+    subtitle: "Irama tradisi Subang",
+    category: "budaya",
+    video: "/videos/subang/sisingaan-performance.mp4",
+    poster: "/images/subang/video-posters/sisingaan-performance.webp",
+    duration: 8,
+    mobileFocusX: 70,
+  },
+  {
+    id: "pineapple",
+    label: "Nanas Subang",
+    shortLabel: "Nanas",
+    subtitle: "Manis dari tanah Subang",
+    category: "kuliner",
+    video: "/videos/subang/subang-pineapple.mp4",
+    poster: "/images/subang/video-posters/subang-pineapple.webp",
+    duration: 10,
+    mobileFocusX: 50,
+  },
+  {
+    id: "coast",
+    label: "Pantai Cirewang",
+    shortLabel: "Pesisir",
+    subtitle: "Senja di pesisir utara",
+    category: "wisata",
+    video: "/videos/subang/subang-north-coast.mp4",
+    poster: "/images/subang/video-posters/subang-north-coast.webp",
+    duration: 8,
+    mobileFocusX: 70,
+  },
+];
+
+const coreSubangPlaces: SubangPlace[] = [
+  {
+    id: "kebun-teh-ciater",
+    title: "Kebun Teh Ciater",
     label: "Ciater",
     category: "wisata",
-    summary:
-      "Pemandian air panas alami di kaki Tangkuban Parahu yang menjadi tujuan relaksasi keluarga.",
-    description:
-      "Mata air panas Ciater mengalir melalui kolam dan aliran berbatu di tengah lanskap hijau. Kawasan ini dikenal sebagai salah satu destinasi unggulan Subang untuk berendam dan beristirahat.",
-    image: "/images/subang/ciater-waterfall.png",
-    gallery: [
-      "/images/subang/ciater-waterfall.png",
-      "/images/subang/hero-panorama.png",
+    sceneId: "ciater",
+    markerTrack: [
+      { time: 0, x: 68, y: 43 },
+      { time: 8, x: 68, y: 43 },
     ],
-    tags: ["Air panas", "Relaksasi", "Keluarga"],
-    location: "Ciater, Kecamatan Ciater, Kabupaten Subang",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sari+Ater+Hot+Spring+Ciater+Subang",
-    position: { x: 27, y: 34 },
+    summary: "Hamparan teh di dataran tinggi selatan Subang dengan udara sejuk dan lanskap berkabut.",
+    description: "Kebun Teh Ciater membentang mengikuti kontur perbukitan di kaki Tangkuban Parahu. Barisan tanaman teh, jalan kebun, dan kabut pegunungan membentuk salah satu lanskap paling khas di koridor wisata Subang selatan.",
+    image: "/images/subang/video-posters/ciater-tea-plantation.webp",
+    gallery: ["/images/subang/video-posters/ciater-tea-plantation.webp"],
+    tags: ["Perkebunan teh", "Pegunungan", "Panorama"],
+    location: "Ciater, Kabupaten Subang",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kebun+Teh+Ciater+Subang",
     featured: true,
   },
   {
     id: "curug-cileat",
     title: "Curug Cileat",
+    label: "Curug Cileat",
     category: "wisata",
-    summary:
-      "Air terjun tinggi di kawasan perbukitan Cisalak yang dicapai melalui jalur trekking pedesaan.",
-    description:
-      "Curug Cileat menghadirkan tebing hijau, debit air yang deras, dan perjalanan melintasi kebun serta sawah. Destinasi ini cocok bagi pengunjung yang mencari pengalaman alam yang lebih aktif.",
-    image: "/images/subang/ciater-waterfall.png",
-    gallery: [
-      "/images/subang/ciater-waterfall.png",
-      "/images/subang/hero-panorama.png",
+    sceneId: "curug",
+    markerTrack: [
+      { time: 0, x: 60, y: 26 },
+      { time: 1.2, x: 62, y: 28 },
+      { time: 8, x: 62, y: 28 },
     ],
+    summary: "Air terjun tinggi di kawasan perbukitan Cisalak yang dicapai melalui jalur trekking pedesaan.",
+    description: "Curug Cileat menghadirkan aliran air tinggi di tengah hutan tropis, tebing hijau, dan kabut halus di dasar lembah. Perjalanan menuju curug melewati kebun, sawah, dan jalur perbukitan.",
+    image: "/images/subang/video-posters/curug-cileat-waterfall.webp",
+    gallery: ["/images/subang/video-posters/curug-cileat-waterfall.webp"],
     tags: ["Air terjun", "Trekking", "Alam"],
     location: "Mayang, Kecamatan Cisalak, Kabupaten Subang",
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=Curug+Cileat+Subang",
-    position: { x: 38, y: 50 },
-    featured: false,
-  },
-  {
-    id: "pantai-pondok-bali",
-    title: "Pantai Pondok Bali",
-    category: "wisata",
-    summary:
-      "Pantai utara Subang dengan garis pantai landai, pepohonan pesisir, dan suasana matahari terbenam.",
-    description:
-      "Pantai Pondok Bali memperlihatkan sisi pesisir Subang yang berbeda dari kawasan pegunungannya. Pengunjung datang untuk menikmati angin laut, bersantai bersama keluarga, dan menyaksikan senja.",
-    image: "/images/subang/hero-panorama.png",
-    gallery: [
-      "/images/subang/hero-panorama.png",
-      "/images/subang/ciater-waterfall.png",
-    ],
-    tags: ["Pantai", "Pesisir", "Senja"],
-    location: "Mayangan, Kecamatan Legonkulon, Kabupaten Subang",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Pantai+Pondok+Bali+Subang",
-    position: { x: 72, y: 31 },
-    featured: false,
-  },
-  {
-    id: "nanas-madu-subang",
-    title: "Nanas Madu Subang",
-    category: "kuliner",
-    summary:
-      "Buah khas Subang bercita rasa manis segar yang banyak dijumpai di kebun dan kios Jalancagak.",
-    description:
-      "Nanas telah lama melekat pada identitas pertanian Subang. Varietas madu digemari karena daging buahnya manis, berair, dan dapat dinikmati langsung maupun diolah menjadi dodol, selai, dan minuman.",
-    image: "/images/subang/subang-culinary.png",
-    gallery: [
-      "/images/subang/subang-culinary.png",
-      "/images/subang/hero-panorama.png",
-    ],
-    tags: ["Nanas", "Oleh-oleh", "Hasil kebun"],
-    location: "Jalancagak, Kabupaten Subang",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sentra+Nanas+Jalancagak+Subang",
-    position: { x: 48, y: 43 },
-    featured: false,
-  },
-  {
-    id: "oncom-dawuan",
-    title: "Oncom Dawuan",
-    category: "kuliner",
-    summary:
-      "Olahan fermentasi bercita rasa gurih yang menjadi bagian dari keseharian kuliner masyarakat Subang.",
-    description:
-      "Oncom dari kawasan Dawuan biasa diolah menjadi tumisan, sambal, atau isian hidangan Sunda. Produk ini mudah ditemukan di pasar tradisional dan menjadi pilihan oleh-oleh yang dekat dengan dapur lokal.",
-    image: "/images/subang/subang-culinary.png",
-    gallery: [
-      "/images/subang/subang-culinary.png",
-      "/images/subang/sisingaan.png",
-    ],
-    tags: ["Oncom", "Kuliner Sunda", "Pasar tradisional"],
-    location: "Dawuan, Kabupaten Subang",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Oncom+Dawuan+Subang",
-    position: { x: 61, y: 49 },
-    featured: false,
+    featured: true,
   },
   {
     id: "sisingaan",
     title: "Sisingaan",
     category: "budaya",
-    summary:
-      "Kesenian arak-arakan singa khas Subang yang memadukan musik, tari, dan semangat kebersamaan.",
-    description:
-      "Sisingaan menampilkan tandu berbentuk singa yang diusung sambil menari mengikuti iringan kendang dan terompet. Pertunjukan ini tumbuh sebagai ekspresi budaya masyarakat Subang dan kerap hadir dalam hajatan serta festival.",
-    image: "/images/subang/sisingaan.png",
-    gallery: [
-      "/images/subang/sisingaan.png",
-      "/images/subang/subang-culinary.png",
+    sceneId: "sisingaan",
+    markerTrack: [
+      { time: 0, x: 70, y: 39 },
+      { time: 4, x: 68, y: 40 },
+      { time: 8, x: 70, y: 39 },
     ],
+    summary: "Kesenian arak-arakan singa khas Subang yang memadukan musik, tari, dan kebersamaan.",
+    description: "Sisingaan menampilkan tandu berbentuk singa yang diusung sambil menari mengikuti iringan kendang dan terompet. Pertunjukan ini menjadi identitas budaya Subang dan hadir dalam hajatan serta festival.",
+    image: "/images/subang/video-posters/sisingaan-performance.webp",
+    gallery: ["/images/subang/video-posters/sisingaan-performance.webp"],
     tags: ["Seni pertunjukan", "Arak-arakan", "Tradisi"],
     location: "Kabupaten Subang, Jawa Barat",
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=Museum+Wisma+Karya+Subang",
-    position: { x: 70, y: 61 },
     featured: true,
   },
   {
-    id: "kampung-adat-banceuy",
-    title: "Kampung Adat Banceuy",
-    category: "budaya",
-    summary:
-      "Kampung adat di Sanca yang menjaga upacara, kesenian, dan pengetahuan agraris Sunda.",
-    description:
-      "Masyarakat Kampung Adat Banceuy mempertahankan tradisi seperti Ruwatan Bumi sebagai ungkapan syukur atas hasil panen. Lingkungan kampung menjadi ruang belajar tentang adat, gotong royong, dan hubungan warga dengan alam.",
-    image: "/images/subang/sisingaan.png",
-    gallery: [
-      "/images/subang/sisingaan.png",
-      "/images/subang/hero-panorama.png",
+    id: "nanas-subang",
+    title: "Nanas Subang",
+    label: "Nanas Subang",
+    category: "kuliner",
+    sceneId: "pineapple",
+    markerTrack: [
+      { time: 0, x: 34, y: 34 },
+      { time: 4, x: 49, y: 31 },
+      { time: 8, x: 56, y: 31 },
+      { time: 10, x: 57, y: 31 },
     ],
-    tags: ["Kampung adat", "Ruwatan Bumi", "Sunda"],
-    location: "Sanca, Kecamatan Ciater, Kabupaten Subang",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kampung+Adat+Banceuy+Subang",
-    position: { x: 16, y: 47 },
+    summary: "Buah khas Subang dengan rasa manis segar yang tumbuh di kawasan perkebunan dataran tinggi.",
+    description: "Nanas telah lama melekat pada identitas pertanian Subang. Buahnya dinikmati langsung dan diolah menjadi dodol, selai, keripik, serta minuman oleh pelaku usaha lokal.",
+    image: "/images/subang/video-posters/subang-pineapple.webp",
+    gallery: ["/images/subang/video-posters/subang-pineapple.webp"],
+    tags: ["Nanas", "Oleh-oleh", "Hasil kebun"],
+    location: "Jalancagak, Kabupaten Subang",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sentra+Nanas+Jalancagak+Subang",
+    featured: true,
+  },
+  {
+    id: "pantai-cirewang",
+    title: "Pantai Cirewang",
+    label: "Pesisir Utara",
+    category: "wisata",
+    sceneId: "coast",
+    markerTrack: [
+      { time: 0, x: 70, y: 45 },
+      { time: 8, x: 70, y: 45 },
+    ],
+    summary: "Bentang pesisir utara Subang dengan mangrove, tambak, dan garis pantai yang tenang.",
+    description: "Pantai Cirewang memperlihatkan karakter pesisir utara Subang yang berbeda dari kawasan pegunungannya. Perjalanan menuju pantai melewati tambak dan kawasan mangrove sebelum terbuka ke Laut Jawa.",
+    image: "/images/subang/video-posters/subang-north-coast.webp",
+    gallery: ["/images/subang/video-posters/subang-north-coast.webp"],
+    tags: ["Pantai", "Mangrove", "Senja"],
+    location: "Pamanukan, Kabupaten Subang",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Pantai+Cirewang+Subang",
+    featured: true,
+  },
+];
+
+const newSubangPlaces: SubangPlace[] = [
+  {
+    id: "curug-cibareubeuy",
+    title: "Curug Cibareubeuy",
+    label: "Cibareubeuy",
+    category: "wisata",
+    sceneId: "curug",
+    markerTrack: [
+      { time: 0, x: 34, y: 48 },
+      { time: 8, x: 34, y: 48 },
+    ],
+    summary:
+      "Air terjun setinggi sekitar 90 meter di kawasan Desa Wisata Cibeusi yang dikelilingi hutan hijau.",
+    description:
+      "Curug Cibareubeuy merupakan atraksi alam Desa Wisata Cibeusi di Kecamatan Ciater. Jalur menuju air terjun membawa pengunjung melewati lanskap pedesaan dan hutan, dengan fasilitas dasar seperti tempat makan, musala, kamar mandi, dan persewaan alat di kawasan wisata.",
+    image: "/images/subang/expanded/curug-cibareubeuy.webp",
+    gallery: ["/images/subang/expanded/curug-cibareubeuy.webp"],
+    tags: ["Air terjun", "Desa wisata", "Trekking"],
+    location: "Cibeusi, Kecamatan Ciater, Kabupaten Subang",
+    mapsUrl:
+      "https://www.google.com/maps/search/?api=1&query=Curug+Cibareubeuy+Subang",
+    sourceUrl: "https://jadesta.kemenpar.go.id/atraksi/curug_cibareubeuy",
+    featured: false,
+  },
+  {
+    id: "museum-subang",
+    title: "Museum Subang",
+    label: "Wisma Karya",
+    category: "budaya",
+    sceneId: "sisingaan",
+    markerTrack: [
+      { time: 0, x: 30, y: 54 },
+      { time: 8, x: 30, y: 54 },
+    ],
+    summary:
+      "Museum di Gedung Wisma Karya yang merangkum sejarah, budaya, dan perkembangan Kabupaten Subang.",
+    description:
+      "Museum Subang menempati Gedung Wisma Karya, salah satu bangunan bersejarah di pusat Subang. Koleksinya menjadi titik awal untuk mengenal perjalanan daerah, temuan arkeologis, tradisi masyarakat, dan warisan budaya sebelum melanjutkan eksplorasi ke kawasan lain.",
+    image: "/images/subang/expanded/museum-subang.webp",
+    gallery: ["/images/subang/expanded/museum-subang.webp"],
+    tags: ["Museum", "Sejarah", "Wisma Karya"],
+    location: "Jalan Ade Irma Suryani Nasution, Kabupaten Subang",
+    mapsUrl:
+      "https://www.google.com/maps/search/?api=1&query=Museum+Wisma+Karya+Subang",
+    sourceUrl:
+      "https://subang.go.id/public/index.php/berita/subang-luncurkan-paket-wisata-sejarah-menghidupkan-warisan-budaya-untuk-generasi-muda",
+    featured: false,
+  },
+  {
+    id: "rumah-makan-mang-yeye",
+    title: "Rumah Makan Mang Yeye",
+    label: "Mang Yeye",
+    category: "kuliner",
+    sceneId: "pineapple",
+    markerTrack: [
+      { time: 0, x: 72, y: 56 },
+      { time: 10, x: 72, y: 56 },
+    ],
+    summary:
+      "Rumah makan Sunda di koridor Kalijati dengan hamparan sawah dan pilihan ayam, ikan, pepes, serta sambal dadak.",
+    description:
+      "Rumah Makan Mang Yeye dikenal sebagai salah satu tujuan kuliner Sunda di Subang. Menu yang ditawarkan mencakup ayam dan ikan, aneka pepes, sayur asem, karedok, sate maranggi, serta sambal dadak dalam suasana makan yang menghadap area persawahan.",
+    image: "/images/subang/subang-culinary.png",
+    gallery: ["/images/subang/subang-culinary.png"],
+    tags: ["Kuliner Sunda", "Pepes", "Kalijati"],
+    location: "Jalan Raya Kalijati, Kabupaten Subang",
+    mapsUrl:
+      "https://www.google.com/maps/search/?api=1&query=Rumah+Makan+Mang+Yeye+Subang",
+    sourceUrl: "https://wisata.subang.go.id/view-rumah-makan-mang-yeye.jsp",
     featured: false,
   },
 ];
+
+const showNewSubangPlaces =
+  process.env.NEXT_PUBLIC_SHOW_NEW_SUBANG_PLACES?.toLowerCase() === "true";
+
+export const subangPlaces: SubangPlace[] = showNewSubangPlaces
+  ? [...coreSubangPlaces, ...newSubangPlaces]
+  : coreSubangPlaces;

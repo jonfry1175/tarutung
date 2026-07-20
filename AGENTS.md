@@ -2,16 +2,20 @@
 
 ## Project Structure & Module Organization
 
-This repository is a `Next.js 16` App Router project for the Tarutung city site starter. Keep app entrypoints in `src/app/`, shared logic in `src/lib/`, and reusable UI in `src/components/`.
+This repository is a `Next.js 16` App Router project for the Subang 360 tourism experience. Keep app entrypoints in `src/app/`, shared logic in `src/lib/`, and reusable UI in `src/components/`.
 
-- `src/app/page.tsx`: landing page and section composition
-- `src/app/api/places/route.ts`: JSON endpoint for place data
-- `src/lib/notion.ts`: server-side Notion adapter
-- `src/lib/tarutung-data.ts`: local fallback data and content metadata
-- `src/components/map/` and `src/components/scene/`: Leaflet and Three.js integrations
+- `src/app/page.tsx`: cinematic landing page entrypoint
+- `src/app/jelajahi/page.tsx`: interactive Subang 360 explorer entrypoint
+- `src/lib/subang-data.ts`: active scenes, places, marker tracks, and content metadata
+- `src/components/home/subang-landing-page.tsx`: landing section composition
+- `src/components/home/subang-360-experience.tsx`: explorer state and interactions
+- `src/components/scene/subang-360-scene.tsx`: interactive scene renderer
+- `src/lib/supabase/`: authentication and saved-place persistence
 - `src/components/ui/`: shadcn-style primitives
 - `public/`: static assets
 - `output/`: manual QA artifacts; do not treat as source code
+
+The `tarutung-*` modules, Notion adapter, Leaflet map, and `/api/places` route are legacy starter code. Do not use them for new Subang features; remove or migrate them only in a separately scoped change.
 
 ## Design System
 
@@ -49,7 +53,7 @@ When changing map, scene, or UI behavior, include a manual verification note and
 
 ## Commit & Pull Request Guidelines
 
-The existing history uses Conventional Commit style, e.g. `feat: add interactive showcase for Tarutung...`. Continue with prefixes like `feat:`, `fix:`, and `docs:`.
+The existing history uses Conventional Commit style, e.g. `feat(ui): add Subang landing experience`. Continue with prefixes like `feat:`, `fix:`, and `docs:`.
 
 PRs should include:
 
@@ -60,4 +64,4 @@ PRs should include:
 
 ## Security & Configuration Tips
 
-Keep secrets in `.env.local`; only commit `.env.example`. For Notion, prefer `NOTION_DATA_SOURCE_ID`; `NOTION_DATABASE_ID` is supported as a fallback alias.
+Keep secrets in `.env.local`; only commit `.env.example`. Supabase browser configuration uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Notion variables belong to the legacy adapter only.

@@ -1,8 +1,10 @@
 # Subang 360 Implementation Plan
 
-> **For Codex:** Execute this plan inline and verify every gate before pushing to `main`.
+> **Status: Completed and superseded.** This plan records the first migration from the legacy city starter. The current product now uses a cinematic landing page at `/`, a video-based explorer at `/jelajahi`, Supabase authentication, saved places, and deep links. Use `README.md`, `DESIGN.md`, and the current source code for new work.
 
-**Goal:** Replace the Tarutung starter landing page with a responsive, full-screen Subang 360 explorer that closely reproduces the approved visual concept.
+> **Historical execution note:** This plan was originally executed inline with all quality gates verified before publication. Do not execute it again.
+
+**Historical Goal:** Replace the legacy starter landing page with a responsive, full-screen Subang 360 explorer that closely reproduces the approved visual concept.
 
 **Architecture:** Use a single client-side experience component for the immersive scene, navigation, hotspot interactions, favorites, and detail drawer. Keep destination content in a typed local data module, render a generated Subang panorama as a Three.js texture, and use generated editorial imagery for destination details.
 

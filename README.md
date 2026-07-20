@@ -1,22 +1,34 @@
-# Tarutung Atlas Starter
+# Subang 360
 
-Starter website kota Tarutung berbasis `Next.js 16` dengan stack:
+Platform wisata visual untuk memperkenalkan Kabupaten Subang melalui landing page sinematik dan explorer video interaktif. Konten utama mencakup wisata, kuliner, budaya, dan pilihan perjalanan bagi wisatawan domestik.
 
-- `pnpm`
-- `TypeScript`
-- `Tailwind CSS v4`
-- `shadcn/ui`
-- `Leaflet` + `react-leaflet`
-- `Three.js`
-- `Notion SDK`
+## Pengalaman Utama
 
-## Menjalankan project
+- `/`: landing page editorial dengan hero video Ciater, destinasi unggulan, kuliner, budaya, dan itinerary.
+- `/jelajahi`: explorer Subang 360 dengan chapter video, marker lokasi yang mengikuti timeline, filter kategori, detail tempat, progres kunjungan, favorit, dan rencana perjalanan.
+- `/jelajahi?scene=<scene>&place=<place>`: deep link menuju chapter dan detail tempat tertentu.
+- `/auth/callback`: callback autentikasi Google melalui Supabase.
+
+## Stack
+
+- Next.js 16 App Router dan React 19
+- TypeScript
+- Tailwind CSS v4 dan CSS Modules
+- Supabase Auth dan penyimpanan tempat favorit
+- Three.js untuk renderer scene
+- Lucide React untuk iconography
+- Notion SDK dan Leaflet hanya untuk adapter lama yang belum digunakan pengalaman utama
+
+## Menjalankan Project
 
 ```bash
+pnpm install
 pnpm dev
 ```
 
-Script lain:
+Aplikasi tersedia di `http://localhost:3000`.
+
+Quality gate:
 
 ```bash
 pnpm lint
@@ -24,63 +36,54 @@ pnpm typecheck
 pnpm build
 ```
 
-Catatan:
-
-- `dev` dan `build` diset ke mode `webpack` agar stabil di environment yang membatasi Turbopack.
-- API data tersedia di `http://localhost:3000/api/places`.
+`dev` dan `build` menggunakan webpack agar stabil pada environment proyek ini. Ikuti `AGENTS.md` untuk ketentuan menjalankan quality gate melalui Crabbox.
 
 ## Environment
 
-Template ada di `.env.example`. File kerja lokal ada di `.env.local`.
-
-Key yang dipakai:
+Salin nilai yang dibutuhkan dari `.env.example` ke `.env.local`. Jangan commit `.env.local`.
 
 ```bash
-NOTION_TOKEN=
-NOTION_DATA_SOURCE_ID=
-NOTION_DATABASE_ID=
-NEXT_PUBLIC_MAP_TILE_URL=https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
-NEXT_PUBLIC_MAP_ATTRIBUTION=&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+NEXT_PUBLIC_SHOW_NEW_SUBANG_PLACES=false
 ```
 
-Catatan:
+- Dua variable Supabase diperlukan untuk login Google dan sinkronisasi tempat tersimpan.
+- `NEXT_PUBLIC_SHOW_NEW_SUBANG_PLACES` mengaktifkan tempat Subang yang masih berada di balik feature flag.
+- Variable Notion dan map masih tersedia untuk adapter legacy, tetapi tidak menjadi sumber konten `/` atau `/jelajahi`.
 
-- `NOTION_DATA_SOURCE_ID` adalah key utama untuk SDK Notion versi sekarang.
-- `NOTION_DATABASE_ID` tetap didukung sebagai fallback alias.
+## Struktur Utama
 
-## Schema Notion yang Disarankan
+- `src/app/page.tsx`: entrypoint landing page.
+- `src/app/jelajahi/page.tsx`: entrypoint explorer Subang 360.
+- `src/components/home/subang-landing-page.tsx`: komposisi landing page.
+- `src/components/home/subang-360-experience.tsx`: state dan interaksi explorer.
+- `src/components/scene/subang-360-scene.tsx`: video/scene renderer.
+- `src/lib/subang-data.ts`: scene, tempat, kategori, marker track, dan konten Subang.
+- `src/lib/supabase/`: client, server, dan proxy Supabase.
+- `public/images/subang/`: gambar, poster, dan visual Subang.
+- `public/videos/subang/`: video chapter explorer.
+- `DESIGN.md`: kontrak visual kanonis.
+- `docs/architecture/`: keputusan arsitektur dan istilah domain.
+- `output/`: artefak QA; bukan source code.
 
-Buat satu data source Notion dengan properti berikut:
+## Dokumentasi
 
-| Property | Type | Wajib | Keterangan |
-| --- | --- | --- | --- |
-| `Name` | Title | Ya | Nama tempat |
-| `Slug` | Rich text | Tidak | URL slug manual |
-| `Category` | Select | Ya | `history`, `culture`, `culinary`, `nature`, `modern` |
-| `Summary` | Rich text | Ya | Ringkasan singkat untuk card dan popup |
-| `Latitude` | Number | Ya | Koordinat marker |
-| `Longitude` | Number | Ya | Koordinat marker |
-| `Featured` | Checkbox | Tidak | Muncul di grid utama |
-| `Published` | Checkbox | Tidak | Jika `false`, item di-skip |
-| `Cluster` | Select | Tidak | Nama cluster mini-map |
-| `Order` | Number | Tidak | Urutan tampil |
+- `DESIGN.md`: warna, tipografi, komponen, media, motion, dan responsive behavior.
+- `docs/architecture/adr-001-google-auth-saved-places.md`: keputusan autentikasi dan penyimpanan favorit.
+- `docs/architecture/subang-360-glossary.md`: istilah domain aktif.
+- `output/prd/subang-360-prd.md`: PRD MVP historis yang sudah superseded oleh implementasi sekarang.
+- `docs/archive/`: riset dan dokumentasi starter lama yang tidak berlaku untuk pengembangan baru.
 
-Jika env Notion belum diisi, aplikasi otomatis memakai fallback data dari riset Tarutung.
+## Legacy Tarutung
 
-## Struktur Inti
+Repository ini berasal dari starter Tarutung. Modul berikut masih dipertahankan sementara untuk kompatibilitas dan riwayat implementasi, tetapi tidak digunakan oleh route utama Subang 360:
 
-- `src/app/page.tsx`: landing page starter
-- `src/app/api/places/route.ts`: endpoint JSON untuk place data
-- `src/lib/notion.ts`: adapter Notion server-side
-- `src/lib/tarutung-data.ts`: fallback data awal Tarutung
-- `src/components/map/tarutung-map.tsx`: peta Leaflet
-- `src/components/scene/tarutung-hero-scene.tsx`: hero scene Three.js
-- `components.json`: base config shadcn/ui
+- `src/lib/tarutung-data.ts`
+- `src/lib/notion.ts`
+- `src/components/map/tarutung-map.tsx`
+- `src/components/scene/tarutung-hero-scene.tsx`
+- `src/components/home/home-interactive-showcase.tsx`
+- `src/app/api/places/route.ts`
 
-## Status Setup
-
-Stack ini sudah diverifikasi dengan:
-
-- `pnpm lint`
-- `pnpm typecheck`
-- `pnpm build`
+Jangan gunakan modul tersebut untuk fitur baru. Migrasi atau penghapusannya harus menjadi perubahan kode terpisah karena adapter Notion dan endpoint lama masih saling bergantung.

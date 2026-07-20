@@ -1,7 +1,9 @@
 # Riset Tarutung untuk Website Lomba
 
+> **Status: Deprecated and archived.** Dokumen ini dibuat untuk starter Tarutung sebelum repository beralih menjadi Subang 360. Jangan gunakan data, positioning, lokasi, atau rekomendasi di bawah sebagai requirement produk aktif. Gunakan `README.md`, `DESIGN.md`, `docs/architecture/`, dan `src/lib/subang-data.ts` sebagai sumber kebenaran saat ini.
+
 Tanggal penyusunan: 2026-03-27  
-Basis referensi UX: [samosir-360-audit.md](/home/jonfry/Desktop/work/jon/tarutung1/samosir-360-audit.md)
+Basis referensi UX historis: [samosir-360-audit.md](../../samosir-360-audit.md)
 
 ## Ringkasan
 

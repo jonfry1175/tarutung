@@ -1,5 +1,7 @@
 # PRD: Subang 360
 
+> **Status: Historical MVP baseline, superseded by the current implementation.** This PRD documents the original one-day explorer scope. The active product now has a separate landing page at `/`, a video chapter explorer at `/jelajahi`, Google authentication, saved places, planning controls, and deep links. For current behavior and design rules, use `README.md`, `DESIGN.md`, `docs/architecture/`, and the source code.
+
 ## Visual Reference
 
 ![Konsep visual Subang 360](./subang-360-concept.png)
@@ -8,7 +10,7 @@ Gambar ini adalah acuan arah visual dan interaksi, bukan representasi geografis 
 
 ## Problem Statement
 
-Wisatawan domestik belum memiliki pengalaman digital yang dapat memperlihatkan sisi premium Kabupaten Subang sekaligus menghubungkan wisata, kuliner, dan budaya dalam satu eksplorasi yang menarik. Starter saat ini masih berupa landing page Tarutung dengan scene 3D dekoratif, mini-map terpisah, dan konten pengantar teknis. Pengalaman tersebut belum memiliki identitas Subang, belum menjadikan eksplorasi sebagai fokus utama, dan belum memberikan hubungan langsung antara landmark, cerita, serta tindakan pengguna.
+Wisatawan domestik belum memiliki pengalaman digital yang dapat memperlihatkan sisi premium Kabupaten Subang sekaligus menghubungkan wisata, kuliner, dan budaya dalam satu eksplorasi yang menarik. Pada saat PRD ini ditulis, repository masih memakai starter kota lama dengan scene 3D dekoratif, mini-map terpisah, dan konten pengantar teknis. Pengalaman tersebut belum memiliki identitas Subang, belum menjadikan eksplorasi sebagai fokus utama, dan belum memberikan hubungan langsung antara landmark, cerita, serta tindakan pengguna.
 
 Proyek hanya memiliki waktu development satu hari. Karena itu, produk harus menjadi MVP yang fokus: satu pengalaman fullscreen bernama **Subang 360**, menggunakan fondasi Three.js, Leaflet, data fallback, dan API tempat yang sudah tersedia. Produk tidak boleh berkembang menjadi portal wisata dengan banyak halaman atau sistem perjalanan lengkap.
 
@@ -59,7 +61,7 @@ MVP menggunakan terrain/scene 3D bergaya sinematik yang dapat diorbitkan. Istila
 
 - Replace the conventional multi-section landing page with one fullscreen Subang 360 experience. Supporting content appears inside the explorer rather than as long page sections.
 - Reuse the existing Next.js App Router, TypeScript, Tailwind, Three.js, Leaflet, Notion adapter, and JSON place endpoint. Do not introduce another frontend framework or 3D engine.
-- Rebrand the existing Tarutung domain model and visible content to Subang. Remove Tarutung-specific fallback records, labels, coordinates, and editorial copy from the user-facing experience.
+- Rebrand the existing legacy domain model and visible content to Subang. Remove starter-specific fallback records, labels, coordinates, and editorial copy from the user-facing experience.
 - Limit the MVP to 6-8 curated hotspots. The initial set must cover all three categories and should prioritize recognizable, visually strong, and verifiable Subang experiences.
 - Use four filter states: Semua, Wisata, Kuliner, and Budaya. Filtering changes marker visibility without rebuilding or resetting the scene.
 - Treat the experience as four explicit UI states: loading/fallback, default exploration, filtered exploration, and destination detail open.
@@ -89,7 +91,7 @@ MVP menggunakan terrain/scene 3D bergaya sinematik yang dapat diorbitkan. Istila
 - Perform one manual smoke check at a desktop viewport and one at a mobile viewport.
 - The smoke check verifies only external behavior: initial load, 3D or static fallback visibility, category filtering, hotspot selection, detail close behavior, external route link, visited progress persistence, audio opt-in, and reduced-motion behavior.
 - Confirm that the page remains usable with Notion configuration absent by exercising the fallback data path.
-- Confirm that no Tarutung copy or location data remains visible in the final Subang experience.
+- Confirm that no legacy starter copy or location data remains visible in the final Subang experience.
 - Visual verification must confirm that labels and controls do not overlap, the scene is not blank, mobile text fits, and the detail panel does not prevent returning to exploration.
 
 ## Out of Scope

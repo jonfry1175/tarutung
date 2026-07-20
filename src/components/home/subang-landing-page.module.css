@@ -44,7 +44,7 @@
   height: 100dvh;
   isolation: isolate;
   overflow: hidden;
-  background: url("/images/subang/video-posters/ciater-tea-plantation.webp") center 45% / cover no-repeat;
+  background: url("/images/subang/video-posters/ciater-tea-plantation.webp") center 45% / auto 119% no-repeat;
 }
 
 .hero :global(.landing-hero-video) {
@@ -55,26 +55,28 @@
   height: 100%;
   object-fit: cover;
   object-position: center 45%;
+  transform: scale(1.19);
 }
 
 .heroShade {
   position: absolute;
   z-index: -2;
   inset: 0;
-  background: rgba(3, 12, 10, 0.42);
-  box-shadow: inset 0 -210px 190px rgba(3, 16, 13, 0.5);
+  background: rgba(3, 12, 10, 0.06);
+  box-shadow: inset 0 -300px 220px rgba(3, 16, 13, 0.44), inset 240px 0 220px rgba(3, 16, 13, 0.14);
 }
 
 .header {
-  position: relative;
+  position: absolute;
   z-index: 5;
-  display: grid;
-  width: min(100% - 72px, 1460px);
-  min-height: 112px;
-  margin: 0 auto;
-  grid-template-columns: 1fr auto 1fr;
+  top: 0;
+  left: 50%;
+  display: flex;
+  width: min(100% - 96px, 1560px);
+  min-height: 148px;
+  justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(226, 200, 143, 0.24);
+  transform: translateX(-50%);
 }
 
 .brand {
@@ -108,54 +110,178 @@
   text-align: center;
 }
 
-.desktopNav {
-  display: flex;
-  align-items: center;
-  gap: clamp(28px, 4vw, 66px);
-}
-
-.desktopNav a,
-.headerActions > a {
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 14px;
-  transition: color 160ms ease;
-}
-
-.desktopNav a:hover,
-.desktopNav a:focus-visible,
-.headerActions > a:hover,
-.headerActions > a:focus-visible {
-  color: var(--gold-light);
-}
-
 .headerActions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 12px;
 }
 
-.headerActions > a {
-  display: inline-flex;
+.utilityPanel {
+  display: flex;
+  min-height: 62px;
   align-items: center;
-  gap: 4px;
+  border-radius: 15px;
+  color: #24312b;
+  background: rgba(255, 250, 240, 0.94);
+  box-shadow: 0 8px 30px rgba(5, 17, 14, 0.12);
+  backdrop-filter: blur(12px);
 }
 
-.headerActions > a svg {
+.headerActions details {
+  position: relative;
+}
+
+.headerActions summary {
+  display: flex;
+  min-height: 62px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 23px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.headerActions summary::-webkit-details-marker {
+  display: none;
+}
+
+.headerActions summary svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.7;
+}
+
+.searchMenu > summary {
+  padding-right: 17px;
+}
+
+.navigationMenu > summary {
+  padding-left: 17px;
+}
+
+.languageMenu {
+  min-width: 96px;
+  border-radius: 15px;
+  color: #5c5039;
+  background: rgba(255, 250, 240, 0.76);
+  box-shadow: 0 8px 30px rgba(5, 17, 14, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.languageMenu summary {
+  justify-content: center;
+}
+
+.languageMenu summary svg {
   width: 14px;
 }
 
-.mobileMenu {
-  display: none;
+.navigationMenu nav,
+.searchForm,
+.languageMenu > div {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  border: 1px solid rgba(199, 162, 91, 0.28);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--paper);
+  background: rgba(6, 27, 22, 0.97);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+}
+
+.navigationMenu nav {
+  display: grid;
+}
+
+.navigationMenu nav a,
+.languageMenu button {
+  border-radius: 4px;
+  padding: 11px 12px;
+  color: var(--paper);
+  font-size: 13px;
+  text-align: left;
+}
+
+.navigationMenu nav a:hover,
+.navigationMenu nav a:focus-visible,
+.languageMenu button:hover,
+.languageMenu button:focus-visible {
+  color: var(--gold-light);
+  background: var(--forest-soft);
+}
+
+.searchForm {
+  right: auto;
+  left: 0;
+  width: min(330px, calc(100vw - 40px));
+}
+
+.searchForm label {
+  display: block;
+  margin: 3px 2px 9px;
+  color: var(--gold-light);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.searchForm > div {
+  display: flex;
+  gap: 6px;
+}
+
+.searchForm input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 4px;
+  padding: 11px 12px;
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+.searchForm input:focus {
+  border-color: var(--gold-light);
+}
+
+.searchForm button {
+  display: grid;
+  width: 44px;
+  flex: none;
+  place-items: center;
+  border-radius: 4px;
+  color: #17261f;
+  background: var(--gold-light);
+}
+
+.searchForm button svg {
+  width: 18px;
+}
+
+.languageMenu > div {
+  min-width: 150px;
+}
+
+.languageMenu button {
+  width: 100%;
 }
 
 .heroContent {
   display: flex;
-  width: min(100% - 72px, 1460px);
-  height: calc(100% - 112px);
+  width: min(100% - 96px, 1560px);
+  height: 100%;
   margin: 0 auto;
+  padding-top: 150px;
   padding-bottom: 8vh;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: flex-start;
 }
 
@@ -168,33 +294,33 @@
 }
 
 .heroContent .eyebrow {
-  margin-bottom: 20px;
+  margin-bottom: 13px;
   color: var(--gold-light);
 }
 
 .heroContent h1 {
-  max-width: 1200px;
+  max-width: 680px;
   margin: 0;
   color: #fffaf0;
-  font-size: clamp(62px, 6vw, 96px);
-  font-weight: 500;
-  line-height: 0.84;
+  font-size: clamp(46px, 3vw, 52px);
+  font-weight: 400;
+  line-height: 0.88;
   text-wrap: balance;
   text-shadow: 0 4px 30px rgba(0, 0, 0, 0.32);
 }
 
 .heroContent > p:not(.eyebrow) {
   max-width: 610px;
-  margin-top: 30px;
+  margin-top: 17px;
   color: rgba(255, 255, 255, 0.86);
-  font-size: clamp(15px, 1.3vw, 19px);
+  font-size: 14px;
   line-height: 1.7;
 }
 
 .primaryButton {
   display: inline-flex;
   min-height: 52px;
-  margin-top: 32px;
+  margin-top: 24px;
   align-items: center;
   justify-content: center;
   gap: 12px;
@@ -222,15 +348,23 @@
 
 .scrollCue {
   position: absolute;
-  bottom: 26px;
+  bottom: 31px;
   left: 50%;
   display: grid;
-  width: 28px;
-  height: 44px;
+  width: 30px;
+  height: 48px;
   place-items: start center;
   border: 1px solid rgba(255, 255, 255, 0.68);
   border-radius: 15px;
   transform: translateX(-50%);
+}
+
+.scrollCue small {
+  position: absolute;
+  top: 53px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .scrollCue span {
@@ -618,10 +752,6 @@
     width: min(100% - 40px, 1460px);
   }
 
-  .desktopNav {
-    gap: 24px;
-  }
-
   .heroContent {
     width: min(100% - 40px, 1460px);
   }
@@ -657,8 +787,7 @@
 
   .header {
     width: calc(100% - 32px);
-    min-height: 82px;
-    grid-template-columns: 1fr auto;
+    min-height: 90px;
   }
 
   .brand > svg {
@@ -675,63 +804,38 @@
     font-size: 11px;
   }
 
-  .desktopNav,
-  .headerActions > a {
+  .utilityPanel {
+    min-height: 48px;
+    border-radius: 10px;
+  }
+
+  .headerActions summary {
+    min-height: 48px;
+    padding: 0 14px;
+  }
+
+  .headerActions summary span,
+  .searchMenu {
     display: none;
   }
 
-  .mobileMenu {
-    position: relative;
-    display: block;
-  }
-
-  .mobileMenu summary {
-    display: grid;
-    width: 44px;
-    height: 44px;
-    place-items: center;
-    border: 1px solid rgba(226, 200, 143, 0.45);
-    border-radius: 4px;
-    list-style: none;
-    cursor: pointer;
-  }
-
-  .mobileMenu summary::-webkit-details-marker {
+  .languageMenu {
     display: none;
   }
 
-  .mobileMenu summary svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .mobileMenu nav {
-    position: absolute;
-    top: 52px;
-    right: 0;
-    display: grid;
-    min-width: 190px;
-    border: 1px solid rgba(226, 200, 143, 0.35);
-    border-radius: 4px;
-    padding: 8px;
-    background: rgba(6, 27, 22, 0.98);
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.32);
-  }
-
-  .mobileMenu nav a {
-    padding: 12px 14px;
-    color: var(--paper);
-    font-size: 13px;
+  .navigationMenu nav {
+    top: calc(100% + 8px);
   }
 
   .heroContent {
     width: calc(100% - 40px);
-    height: calc(100% - 82px);
-    padding-bottom: 4vh;
+    height: 100%;
+    padding-top: 100px;
+    padding-bottom: 5vh;
   }
 
   .heroContent h1 {
-    font-size: clamp(49px, 15vw, 72px);
+    font-size: clamp(46px, 13vw, 62px);
     line-height: 0.9;
   }
 
@@ -743,8 +847,8 @@
   }
 
   .heroContent .primaryButton {
-    width: 100%;
-    max-width: 320px;
+    width: auto;
+    max-width: none;
   }
 
   .scrollCue {

@@ -1,11 +1,13 @@
 import {
   ArrowRight,
+  ChevronDown,
   ChevronRight,
   Clock3,
   Landmark,
   MapPin,
   Menu,
   Route,
+  Search,
   Share2,
   UsersRound,
 } from "lucide-react";
@@ -108,23 +110,39 @@ export function SubangLandingPage() {
         <div className={styles.heroShade} aria-hidden="true" />
         <header className={styles.header}>
           <Brand />
-          <nav className={styles.desktopNav} aria-label="Navigasi landing page">
-            <a href="#wisata">Wisata</a>
-            <a href="#kuliner">Kuliner</a>
-            <a href="#budaya">Budaya</a>
-            <a href="#rencana">Rencana</a>
-          </nav>
           <div className={styles.headerActions}>
-            <Link href="/jelajahi">ID <ChevronRight aria-hidden="true" /></Link>
-            <details className={styles.mobileMenu}>
-              <summary aria-label="Buka navigasi"><Menu aria-hidden="true" /></summary>
-              <nav aria-label="Navigasi mobile">
-                <a href="#wisata">Wisata</a>
-                <a href="#kuliner">Kuliner</a>
-                <a href="#budaya">Budaya</a>
-                <a href="#rencana">Rencana</a>
-                <Link href="/jelajahi">Subang 360</Link>
-              </nav>
+            <div className={styles.utilityPanel}>
+              <details className={styles.searchMenu}>
+                <summary aria-label="Buka pencarian">
+                  <Search aria-hidden="true" />
+                  <span>Search</span>
+                </summary>
+                <form action="/jelajahi" className={styles.searchForm}>
+                  <label htmlFor="landing-search">Cari di Subang</label>
+                  <div>
+                    <input id="landing-search" name="q" placeholder="Wisata, kuliner, budaya..." />
+                    <button type="submit" aria-label="Cari"><Search aria-hidden="true" /></button>
+                  </div>
+                </form>
+              </details>
+              <details className={styles.navigationMenu}>
+                <summary aria-label="Buka navigasi">
+                  <Menu aria-hidden="true" />
+                  <span>Menu</span>
+                </summary>
+                <nav aria-label="Navigasi landing page">
+                  <a href="#tentang">Tentang</a>
+                  <a href="#wisata">Wisata</a>
+                  <a href="#kuliner">Kuliner</a>
+                  <a href="#budaya">Budaya</a>
+                  <a href="#rencana">Rencana</a>
+                  <Link href="/jelajahi">Subang 360</Link>
+                </nav>
+              </details>
+            </div>
+            <details className={styles.languageMenu}>
+              <summary aria-label="Pilih bahasa"> ID <ChevronDown aria-hidden="true" /></summary>
+              <div><button type="button" aria-current="true">Indonesia</button></div>
             </details>
           </div>
         </header>
@@ -132,13 +150,14 @@ export function SubangLandingPage() {
         <div className={styles.heroContent}>
           <p className={styles.eyebrow}>Selamat datang di Subang</p>
           <h1 id="landing-title">Subang,<br />Dari Pegunungan ke Pesisir</h1>
-          <p>Alam yang menyejukkan, budaya yang mengakar, dan keramahan yang tulus menyatu dalam satu perjalanan.</p>
+          <p>Alam yang menyejukkan, budaya yang mengakar.</p>
           <Link className={styles.primaryButton} href="/jelajahi">
             Jelajahi Subang 360 <ArrowRight aria-hidden="true" />
           </Link>
         </div>
         <a className={styles.scrollCue} href="#tentang" aria-label="Lihat cerita Subang">
           <span />
+          <small>Scroll</small>
         </a>
       </section>
 

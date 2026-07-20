@@ -1,0 +1,9 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/api/places/route": "app/api/places/route.js",
+  "/auth/callback/route": "app/auth/callback/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/jelajahi/page": "app/jelajahi/page.js",
+  "/page": "app/page.js"
+}

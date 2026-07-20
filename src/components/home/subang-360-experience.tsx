@@ -121,9 +121,25 @@ export function Subang360Experience() {
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
-      setVisited(readStoredIds(VISITED_KEY));
+      const params = new URLSearchParams(window.location.search);
+      const requestedScene = params.get("scene");
+      const requestedPlace = params.get("place");
+      const deepLinkedPlace = subangPlaces.find((place) => place.id === requestedPlace);
+      const deepLinkedScene = subangScenes.find((scene) => scene.id === requestedScene);
+      const storedVisited = readStoredIds(VISITED_KEY);
 
-      if (new URLSearchParams(window.location.search).get("auth") === "error") {
+      if (deepLinkedPlace) {
+        storedVisited.add(deepLinkedPlace.id);
+        window.localStorage.setItem(VISITED_KEY, JSON.stringify([...storedVisited]));
+        setActiveSceneId(deepLinkedPlace.sceneId);
+        setSelectedId(deepLinkedPlace.id);
+      } else if (deepLinkedScene) {
+        setActiveSceneId(deepLinkedScene.id);
+      }
+
+      setVisited(storedVisited);
+
+      if (params.get("auth") === "error") {
         setFeedback("Login Google belum berhasil. Silakan coba lagi.");
         setAuthModalOpen(true);
       }
@@ -670,6 +686,7 @@ export function Subang360Experience() {
               <X />
             </button>
             <span className="subang360-auth-mark"><Bookmark aria-hidden="true" /></span>
+            <span className="subang360-auth-accent" aria-hidden="true" />
             <h2 id="subang360-auth-title">Simpan perjalananmu</h2>
             <p>Masuk agar destinasi pilihanmu tetap tersimpan di perangkat mana pun.</p>
             <button
@@ -678,9 +695,19 @@ export function Subang360Experience() {
               onClick={() => void continueWithGoogle()}
               disabled={authBusy}
             >
-              {authBusy ? <LoaderCircle className="subang360-spin" /> : <span aria-hidden="true">G</span>}
+              {authBusy ? (
+                <LoaderCircle className="subang360-spin" />
+              ) : (
+                <svg className="subang360-google-mark" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#4285f4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-1.99 3.02v2.55h3.23c1.89-1.74 2.98-4.3 2.98-7.42Z" />
+                  <path fill="#34a853" d="M12 22c2.7 0 4.96-.9 6.62-2.42l-3.23-2.55c-.9.6-2.04.96-3.39.96-2.6 0-4.81-1.76-5.6-4.12H3.07v2.63A10 10 0 0 0 12 22Z" />
+                  <path fill="#fbbc05" d="M6.4 13.87A6 6 0 0 1 6.09 12c0-.65.11-1.28.31-1.87V7.5H3.07A10 10 0 0 0 2 12c0 1.61.39 3.14 1.07 4.5l3.33-2.63Z" />
+                  <path fill="#ea4335" d="M12 6.01c1.47 0 2.79.51 3.83 1.5l2.87-2.88A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.93 5.5l3.33 2.63C7.19 7.77 9.4 6.01 12 6.01Z" />
+                </svg>
+              )}
               Lanjutkan dengan Google
             </button>
+            <p className="subang360-auth-note">Destinasi tersimpan akan mengikuti akunmu.</p>
             {feedback && <p className="subang360-auth-error" role="alert">{feedback}</p>}
           </section>
         </div>

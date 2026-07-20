@@ -43,3 +43,9 @@ next-env.d.ts
 
 .playwright-cli/*
 /.next-codex/
+
+# Crabbox local runner configuration and artifacts
+/.crabbox/
+/.crabbox.yaml
+/.agents/skills/crabbox/
+/.github/workflows/crabbox.yml

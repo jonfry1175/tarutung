@@ -285,8 +285,8 @@ a {
 
 .subang360-progress-star {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   flex: none;
   place-items: center;
   border: 2px solid rgba(210, 174, 102, 0.45);
@@ -1195,35 +1195,72 @@ a {
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 20px;
-  background: rgba(5, 10, 9, 0.72);
-  backdrop-filter: blur(8px);
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(42, 68, 54, 0.2), transparent 42%),
+    rgba(4, 10, 8, 0.78);
+  backdrop-filter: blur(12px) saturate(0.8);
+  animation: subang360-auth-backdrop-in 220ms ease-out both;
 }
 
 .subang360-auth-dialog {
   position: relative;
-  width: min(100%, 410px);
-  border: 1px solid rgba(213, 185, 128, 0.58);
-  border-radius: 8px;
-  padding: 34px 32px 30px;
-  color: #17251f;
-  background: #f7f4ed;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+  isolation: isolate;
+  width: min(100%, 432px);
+  border: 1px solid rgba(185, 148, 80, 0.7);
+  border-radius: 18px;
+  padding: 58px 42px 34px;
+  color: #173127;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.82), transparent 34%),
+    linear-gradient(145deg, rgba(250, 247, 238, 0.98), rgba(242, 236, 222, 0.98));
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.48),
+    0 3px 0 rgba(211, 181, 121, 0.18) inset;
   text-align: center;
+  animation: subang360-auth-dialog-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.subang360-auth-dialog::before {
+  position: absolute;
+  z-index: -1;
+  inset: 6px;
+  border: 1px solid rgba(131, 105, 60, 0.13);
+  border-radius: 12px;
+  background-image: radial-gradient(rgba(32, 55, 44, 0.08) 0.55px, transparent 0.7px);
+  background-size: 5px 5px;
+  content: "";
+  pointer-events: none;
 }
 
 .subang360-auth-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 14px;
+  right: 14px;
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   place-items: center;
   border: 0;
-  color: #526058;
-  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: #52665c;
+  background: rgba(255, 255, 255, 0.28);
   cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.subang360-auth-close:hover {
+  border-color: rgba(32, 55, 44, 0.16);
+  color: #173127;
+  background: rgba(255, 255, 255, 0.7);
+  transform: rotate(4deg);
+}
+
+.subang360-auth-close:focus-visible,
+.subang360-google-button:focus-visible {
+  outline: 3px solid rgba(191, 148, 67, 0.42);
+  outline-offset: 3px;
 }
 
 .subang360-auth-close svg {
@@ -1232,77 +1269,143 @@ a {
 }
 
 .subang360-auth-mark {
+  position: absolute;
+  top: -29px;
+  left: 50%;
   display: grid;
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 18px;
+  width: 62px;
+  height: 62px;
   place-items: center;
+  border: 5px solid #f5f0e4;
   border-radius: 50%;
-  color: #f1dfbb;
-  background: #20372c;
+  color: #efd8a4;
+  background: linear-gradient(145deg, #24483a, #142d24);
+  box-shadow: 0 12px 28px rgba(14, 38, 29, 0.28);
+  transform: translateX(-50%);
 }
 
 .subang360-auth-mark svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.7;
+}
+
+.subang360-auth-accent {
+  display: block;
+  width: 34px;
+  height: 2px;
+  margin: 0 auto 17px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #b78a3e 25%, #b78a3e 75%, transparent);
 }
 
 .subang360-auth-dialog h2 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 29px;
+  font-size: clamp(28px, 5vw, 34px);
   font-weight: 500;
-  letter-spacing: 0;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
 
 .subang360-auth-dialog > p {
-  margin: 10px auto 22px;
-  color: #5e6862;
+  max-width: 320px;
+  margin: 13px auto 25px;
+  color: #5a6b62;
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.65;
 }
 
 .subang360-google-button {
   display: flex;
   width: 100%;
-  min-height: 48px;
+  min-height: 54px;
   align-items: center;
   justify-content: center;
-  gap: 11px;
-  border: 1px solid #c9ccc9;
-  border-radius: 6px;
-  color: #1d2923;
-  background: #ffffff;
+  gap: 12px;
+  border: 1px solid rgba(25, 55, 43, 0.24);
+  border-radius: 10px;
+  color: #183126;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 6px 18px rgba(32, 55, 44, 0.07);
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 700;
+  letter-spacing: 0.005em;
   cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
 .subang360-google-button:hover {
-  border-color: #8e9a93;
-  background: #fafafa;
+  border-color: rgba(25, 55, 43, 0.5);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(32, 55, 44, 0.12);
+  transform: translateY(-1px);
+}
+
+.subang360-google-button:active {
+  box-shadow: 0 3px 10px rgba(32, 55, 44, 0.1);
+  transform: translateY(1px);
 }
 
 .subang360-google-button:disabled {
   cursor: wait;
   opacity: 0.7;
+  transform: none;
 }
 
-.subang360-google-button > span {
-  display: grid;
-  width: 22px;
-  height: 22px;
-  place-items: center;
-  border: 1px solid #d8d8d8;
-  border-radius: 50%;
-  color: #4285f4;
-  font: 700 14px Arial, sans-serif;
+.subang360-google-mark {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.subang360-auth-dialog > .subang360-auth-note {
+  margin: 13px auto 0;
+  color: #758078;
+  font-size: 11px;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
 }
 
 .subang360-auth-dialog .subang360-auth-error {
-  margin: 12px 0 0;
+  margin: 10px 0 0;
   color: #a33a2a;
   font-size: 12px;
+}
+
+@keyframes subang360-auth-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes subang360-auth-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .subang360-auth-backdrop {
+    padding: 38px 14px 18px;
+  }
+
+  .subang360-auth-dialog {
+    border-radius: 16px;
+    padding: 52px 24px 28px;
+  }
+
+  .subang360-auth-dialog h2 {
+    font-size: 28px;
+  }
+
+  .subang360-auth-dialog > p {
+    margin-bottom: 22px;
+  }
 }
 
 .subang360-feedback {

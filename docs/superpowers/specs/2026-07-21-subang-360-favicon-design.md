@@ -7,7 +7,7 @@ Replace the generic triangle favicon with a favicon that matches the existing Su
 ## Design
 
 - Reuse the Landmark glyph already displayed in the site header.
-- Render the glyph in the existing gold brand color on a dark green square background.
+- Render the glyph in the existing gold brand color on a transparent background.
 - Use the glyph alone, without the `SUBANG 360` wordmark, to preserve clarity at small favicon sizes.
 - Keep the mark centered with enough surrounding space to avoid clipping.
 

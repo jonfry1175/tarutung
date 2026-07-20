@@ -1,5 +1,13 @@
-import { Subang360Experience } from "@/components/home/subang-360-experience";
+import type { Metadata } from "next";
+
+import { SubangLandingPage } from "@/components/home/subang-landing-page";
+
+export const metadata: Metadata = {
+  title: "Subang | Dari Pegunungan ke Pesisir",
+  description:
+    "Temukan wisata alam, kuliner, budaya, dan perjalanan pilihan di Kabupaten Subang.",
+};
 
 export default function Home() {
-  return <Subang360Experience />;
+  return <SubangLandingPage />;
 }

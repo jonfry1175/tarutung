@@ -113,4 +113,3 @@ The implementation is complete when:
 7. Desktop and 390×844 mobile checks confirm acceptable cover cropping and no layout regression.
 8. The final file is visually acceptable at its web delivery size, with a target size at or below 20 MB.
 9. `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass through the repository's configured Crabbox runner.
-

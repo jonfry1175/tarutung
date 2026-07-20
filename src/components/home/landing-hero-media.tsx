@@ -25,11 +25,11 @@ export function LandingHeroMedia() {
       loop
       playsInline
       preload="metadata"
-      poster="/images/subang/video-posters/ciater-tea-plantation.webp"
+      poster="/images/subang/video-posters/subang-hero-montage.webp"
       aria-hidden="true"
       tabIndex={-1}
     >
-      <source src="/videos/subang/ciater-tea-plantation.mp4" type="video/mp4" />
+      <source src="/videos/subang/subang-hero-montage.mp4" type="video/mp4" />
     </video>
   );
 }

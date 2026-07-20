@@ -9,18 +9,27 @@ const IMAGE_WIDTH = 16;
 const IMAGE_HEIGHT = 9;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 1.55;
+const AUTO_ZOOM = 1.04;
+const AUTO_PAN_SPEED = 0.055;
+const AUTO_RESUME_DELAY = 2500;
 
 export interface Subang360SceneProps {
   zoomSignal?: number;
   resetSignal?: number;
+  motionPaused?: boolean;
 }
 
 interface SceneControls {
   reset: () => void;
   zoom: (direction: number) => void;
+  setMotionPaused: (paused: boolean) => void;
 }
 
-export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps) {
+export function Subang360Scene({
+  zoomSignal,
+  resetSignal,
+  motionPaused = false,
+}: Subang360SceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const posterRef = useRef<HTMLImageElement>(null);
   const controlsRef = useRef<SceneControls | null>(null);
@@ -62,14 +71,18 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
 
     let baseViewHeight = IMAGE_HEIGHT;
     let aspect = 16 / 9;
-    let zoom = 1;
-    let targetZoom = 1;
+    let zoom = reducedMotion ? 1 : AUTO_ZOOM;
+    let targetZoom = zoom;
     let panX = 0;
     let panY = 0;
     let targetPanX = 0;
     let targetPanY = 0;
     let textureReady = false;
     let activePointerId: number | null = null;
+    let autoPanDirection = 1;
+    let autoResumeAt = 0;
+    let externallyPaused = false;
+    let previousFrameTime = performance.now();
     let lastPointerX = 0;
     let lastPointerY = 0;
     let panorama: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> | null = null;
@@ -96,15 +109,49 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
       camera.updateProjectionMatrix();
     };
 
+    const syncHotspots = () => {
+      const viewHeight = baseViewHeight / zoom;
+      const viewWidth = viewHeight * aspect;
+      const baseViewWidth = baseViewHeight * aspect;
+
+      container.parentElement
+        ?.querySelectorAll<HTMLElement>("[data-panorama-x][data-panorama-y]")
+        .forEach((hotspot) => {
+          const x = Number(hotspot.dataset.panoramaX);
+          const y = Number(hotspot.dataset.panoramaY);
+          const anchorX = (x / 100 - 0.5) * baseViewWidth;
+          const anchorY = (0.5 - y / 100) * baseViewHeight;
+          hotspot.style.left = `${50 + ((anchorX - panX) / viewWidth) * 100}%`;
+          hotspot.style.top = `${50 - ((anchorY - panY) / viewHeight) * 100}%`;
+        });
+    };
+
     const render = () => {
       if (!textureReady || document.hidden || disposed) return;
       updateCamera();
       renderer.render(scene, camera);
+      syncHotspots();
     };
 
-    const animate = () => {
+    const animate = (time: number) => {
       frameId = 0;
       if (document.hidden || disposed) return;
+      const deltaSeconds = Math.min((time - previousFrameTime) / 1000, 0.05);
+      previousFrameTime = time;
+
+      const autoPanEligible = !reducedMotion && !externallyPaused && activePointerId === null;
+      const autoPanActive = autoPanEligible && time >= autoResumeAt;
+      if (autoPanActive) {
+        const viewHeight = baseViewHeight / targetZoom;
+        const viewWidth = viewHeight * aspect;
+        const maxX = Math.max(0, (IMAGE_WIDTH - viewWidth) / 2);
+        targetPanX += autoPanDirection * AUTO_PAN_SPEED * deltaSeconds;
+        if (Math.abs(targetPanX) >= maxX) {
+          targetPanX = THREE.MathUtils.clamp(targetPanX, -maxX, maxX);
+          autoPanDirection *= -1;
+        }
+      }
+
       zoom += (targetZoom - zoom) * 0.16;
       panX += (targetPanX - panX) * 0.16;
       panY += (targetPanY - panY) * 0.16;
@@ -112,7 +159,9 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
       if (
         Math.abs(targetZoom - zoom) > 0.001 ||
         Math.abs(targetPanX - panX) > 0.001 ||
-        Math.abs(targetPanY - panY) > 0.001
+        Math.abs(targetPanY - panY) > 0.001 ||
+        autoPanActive ||
+        (autoPanEligible && Number.isFinite(autoResumeAt))
       ) {
         frameId = window.requestAnimationFrame(animate);
       }
@@ -125,8 +174,13 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
         panY = targetPanY;
         render();
       } else if (!frameId && !document.hidden) {
+        previousFrameTime = performance.now();
         frameId = window.requestAnimationFrame(animate);
       }
+    };
+
+    const pauseAutoPan = () => {
+      autoResumeAt = performance.now() + AUTO_RESUME_DELAY;
     };
 
     const resize = () => {
@@ -144,6 +198,7 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
 
     const zoomBy = (direction: number) => {
       if (!direction) return;
+      pauseAutoPan();
       targetZoom = THREE.MathUtils.clamp(
         targetZoom + Math.sign(direction) * 0.12,
         MIN_ZOOM,
@@ -154,15 +209,25 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
     };
 
     const reset = () => {
+      pauseAutoPan();
       targetZoom = 1;
       targetPanX = 0;
       targetPanY = 0;
       requestRender();
     };
 
-    controlsRef.current = { reset, zoom: zoomBy };
+    controlsRef.current = {
+      reset,
+      zoom: zoomBy,
+      setMotionPaused: (paused) => {
+        externallyPaused = paused;
+        if (!paused) pauseAutoPan();
+        requestRender();
+      },
+    };
 
     const handlePointerDown = (event: PointerEvent) => {
+      autoResumeAt = Number.POSITIVE_INFINITY;
       activePointerId = event.pointerId;
       lastPointerX = event.clientX;
       lastPointerY = event.clientY;
@@ -185,6 +250,7 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
     const releasePointer = (event: PointerEvent) => {
       if (event.pointerId !== activePointerId) return;
       activePointerId = null;
+      pauseAutoPan();
       canvas.style.cursor = "grab";
       if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
     };
@@ -205,6 +271,11 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
 
     const handleMotion = (event: MediaQueryListEvent) => {
       reducedMotion = event.matches;
+      if (reducedMotion) {
+        targetPanX = 0;
+        targetPanY = 0;
+        targetZoom = 1;
+      }
       requestRender();
     };
 
@@ -267,6 +338,10 @@ export function Subang360Scene({ zoomSignal, resetSignal }: Subang360SceneProps)
       delete container.dataset.sceneReady;
     };
   }, []);
+
+  useEffect(() => {
+    controlsRef.current?.setMotionPaused(motionPaused);
+  }, [motionPaused]);
 
   useEffect(() => {
     if (zoomSignal !== undefined && zoomSignal !== previousZoomSignalRef.current) {

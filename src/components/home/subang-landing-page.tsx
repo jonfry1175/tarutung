@@ -92,7 +92,7 @@ const itineraries = [
 
 function Brand() {
   return (
-    <Link className={styles.brand} href="#top" aria-label="Kembali ke bagian atas">
+    <Link className={styles.brand} href="/" aria-label="Kembali ke Beranda">
       <Landmark aria-hidden="true" />
       <span><strong>SUBANG</strong><small>360</small></span>
     </Link>

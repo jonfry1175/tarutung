@@ -197,6 +197,7 @@ a {
   color: var(--subang-gold);
   font-family: Georgia, "Times New Roman", serif;
   line-height: 0.9;
+  text-decoration: none;
 }
 
 .subang360-logo-icon {

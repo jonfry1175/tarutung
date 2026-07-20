@@ -220,6 +220,7 @@ Use an 8px-centered scale:
 
 - Keep destination markers aligned to the static panorama composition.
 - Pan and zoom must remain bounded so the panorama never exposes an empty canvas.
+- A subtle automatic pan may run while idle; pause it during user interaction and while destination details are open.
 - Marker alignment is a functional requirement, not a decorative preference.
 
 ### Motion Rules
@@ -282,7 +283,7 @@ Use an 8px-centered scale:
 - Do not add gradients, floating orbs, SVG decoration, or glass effects for visual filler.
 - Do not use oversized marketing headings inside compact panels.
 - Do not place text where it obscures a destination focal point or explorer marker.
-- Do not animate the explorer camera independently.
+- Do not animate the explorer camera without keeping destination markers synchronized.
 - Do not use AI imagery that misrepresents Subang's geography, food, or culture.
 
 ## 11. Page Recipes

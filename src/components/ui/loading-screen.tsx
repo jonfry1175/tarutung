@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Landmark, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 import styles from "./loading-screen.module.css";
 
@@ -183,10 +184,10 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
       {/* Top Header Controls */}
       <header className={styles.topBar}>
-        <div className={styles.brandBadge}>
+        <Link className={styles.brandBadge} href="/" aria-label="Kembali ke Beranda">
           <Landmark aria-hidden="true" />
           <span>SUBANG 360</span>
-        </div>
+        </Link>
         <button
           className={styles.skipButton}
           onClick={triggerExit}
@@ -200,16 +201,18 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
       {/* Center Visual & Title Section */}
       <main className={styles.centerSection}>
-        <div className={styles.emblemWrapper}>
-          <div className={styles.emblemRingOuter} aria-hidden="true" />
-          <div className={styles.emblemRingInner} aria-hidden="true" />
-          <Landmark className={styles.emblemIcon} aria-hidden="true" />
-        </div>
+        <Link className={styles.heroBrand} href="/" aria-label="Kembali ke Beranda">
+          <div className={styles.emblemWrapper}>
+            <div className={styles.emblemRingOuter} aria-hidden="true" />
+            <div className={styles.emblemRingInner} aria-hidden="true" />
+            <Landmark className={styles.emblemIcon} aria-hidden="true" />
+          </div>
 
-        <h1 className={styles.mainTitle}>
-          <span>Subang 360</span>
-        </h1>
-        <p className={styles.tagline}>Dari Pegunungan ke Pesisir</p>
+          <h1 className={styles.mainTitle}>
+            <span>Subang 360</span>
+          </h1>
+          <p className={styles.tagline}>Dari Pegunungan ke Pesisir</p>
+        </Link>
 
         <div className={styles.captionBox} aria-live="polite">
           <div key={captionIndex} className={styles.captionText}>

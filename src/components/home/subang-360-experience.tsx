@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import {
   Bookmark,
@@ -83,11 +84,15 @@ function readStoredIds(key: string) {
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={compact ? "subang360-logo is-compact" : "subang360-logo"}>
+    <Link
+      className={compact ? "subang360-logo is-compact" : "subang360-logo"}
+      href="/"
+      aria-label="Kembali ke Beranda"
+    >
       <Landmark className="subang360-logo-icon" aria-hidden="true" />
       <span>SUBANG</span>
       <span>360</span>
-    </div>
+    </Link>
   );
 }
 
@@ -373,7 +378,11 @@ export function Subang360Experience() {
       </aside>
 
       <section className="subang360-stage" aria-label="Panorama interaktif Subang">
-        <Subang360Scene zoomSignal={zoomSignal} resetSignal={resetSignal} />
+        <Subang360Scene
+          zoomSignal={zoomSignal}
+          resetSignal={resetSignal}
+          motionPaused={Boolean(selectedPlace)}
+        />
         <div className="subang360-shade" aria-hidden="true" />
 
         <div className="subang360-hotspots" aria-label="Destinasi pada panorama">
@@ -394,6 +403,8 @@ export function Subang360Experience() {
                     "--hotspot-color": meta.color,
                   } as CSSProperties
                 }
+                data-panorama-x={position.x}
+                data-panorama-y={position.y}
                 onClick={() => openPlace(place.id)}
                 aria-label={`Buka detail ${place.title}`}
                 aria-pressed={active}

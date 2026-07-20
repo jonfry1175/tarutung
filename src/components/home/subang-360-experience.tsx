@@ -5,20 +5,18 @@ import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import {
   Bookmark,
   Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   Compass,
   Drama,
+  Hand,
   Heart,
-  Languages,
   Landmark,
   LoaderCircle,
   MapPin,
+  Minus,
   Mountain,
+  Mouse,
   Navigation,
-  Pause,
-  Play,
+  Plus,
   RotateCcw,
   SlidersHorizontal,
   Star,
@@ -28,23 +26,31 @@ import {
   X,
 } from "lucide-react";
 import type { CSSProperties, ComponentType } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Subang360Scene } from "@/components/scene/subang-360-scene";
 import { createClient } from "@/lib/supabase/client";
 import {
   categoryMeta,
   subangPlaces,
-  subangScenes,
   type SubangCategory,
-  type MarkerKeyframe,
-  type SubangSceneId,
 } from "@/lib/subang-data";
 
 type BrowseMode = "all" | SubangCategory | "favorites" | "plan";
 
 const VISITED_KEY = "subang360:visited";
 const PENDING_SAVE_KEY = "subang360:pending-save";
+
+const panoramaPositions: Record<string, { x: number; y: number }> = {
+  "kebun-teh-ciater": { x: 27, y: 34 },
+  "curug-cileat": { x: 38, y: 50 },
+  sisingaan: { x: 66, y: 52 },
+  "nanas-subang": { x: 48, y: 43 },
+  "pantai-cirewang": { x: 72, y: 31 },
+  "curug-cibareubeuy": { x: 20, y: 28 },
+  "museum-subang": { x: 58, y: 60 },
+  "rumah-makan-mang-yeye": { x: 55, y: 38 },
+};
 
 const categoryIcons: Record<
   SubangCategory,
@@ -75,23 +81,6 @@ function readStoredIds(key: string) {
   }
 }
 
-function getMarkerPosition(track: MarkerKeyframe[], time: number) {
-  if (track.length === 1 || time <= track[0].time) return track[0];
-
-  const nextIndex = track.findIndex((keyframe) => keyframe.time >= time);
-  if (nextIndex === -1) return track[track.length - 1];
-
-  const previous = track[nextIndex - 1];
-  const next = track[nextIndex];
-  const progress = (time - previous.time) / Math.max(0.001, next.time - previous.time);
-
-  return {
-    time,
-    x: previous.x + (next.x - previous.x) * progress,
-    y: previous.y + (next.y - previous.y) * progress,
-  };
-}
-
 function LogoMark({ compact = false }: { compact?: boolean }) {
   return (
     <div className={compact ? "subang360-logo is-compact" : "subang360-logo"}>
@@ -104,10 +93,8 @@ function LogoMark({ compact = false }: { compact?: boolean }) {
 
 export function Subang360Experience() {
   const supabase = useMemo(() => createClient(), []);
+  const soundtrackRef = useRef<HTMLAudioElement>(null);
   const [mode, setMode] = useState<BrowseMode>("all");
-  const [activeSceneId, setActiveSceneId] = useState<SubangSceneId>("ciater");
-  const [playbackTime, setPlaybackTime] = useState(0);
-  const [videoPaused, setVideoPaused] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [visited, setVisited] = useState<Set<string>>(new Set());
@@ -117,24 +104,20 @@ export function Subang360Experience() {
   const [saveBusyId, setSaveBusyId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
-  const [restartSignal, setRestartSignal] = useState(0);
+  const [zoomSignal, setZoomSignal] = useState(0);
+  const [resetSignal, setResetSignal] = useState(0);
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
       const params = new URLSearchParams(window.location.search);
-      const requestedScene = params.get("scene");
       const requestedPlace = params.get("place");
       const deepLinkedPlace = subangPlaces.find((place) => place.id === requestedPlace);
-      const deepLinkedScene = subangScenes.find((scene) => scene.id === requestedScene);
       const storedVisited = readStoredIds(VISITED_KEY);
 
       if (deepLinkedPlace) {
         storedVisited.add(deepLinkedPlace.id);
         window.localStorage.setItem(VISITED_KEY, JSON.stringify([...storedVisited]));
-        setActiveSceneId(deepLinkedPlace.sceneId);
         setSelectedId(deepLinkedPlace.id);
-      } else if (deepLinkedScene) {
-        setActiveSceneId(deepLinkedScene.id);
       }
 
       setVisited(storedVisited);
@@ -203,8 +186,23 @@ export function Subang360Experience() {
     };
   }, [supabase, userId]);
 
-  const toggleAudio = useCallback(() => {
-    setAudioEnabled((enabled) => !enabled);
+  const toggleAudio = useCallback(async () => {
+    const soundtrack = soundtrackRef.current;
+    if (!soundtrack) return;
+
+    if (!soundtrack.paused) {
+      soundtrack.pause();
+      setAudioEnabled(false);
+      return;
+    }
+
+    soundtrack.volume = 0.45;
+    try {
+      await soundtrack.play();
+      setAudioEnabled(true);
+    } catch {
+      setAudioEnabled(false);
+    }
   }, []);
 
   const filteredPlaces = useMemo(() => {
@@ -216,25 +214,6 @@ export function Subang360Experience() {
   }, [favorites, mode]);
 
   const selectedPlace = subangPlaces.find((place) => place.id === selectedId);
-  const activeScene = subangScenes.find((scene) => scene.id === activeSceneId) ?? subangScenes[0];
-  const visiblePlaces = filteredPlaces.filter((place) => place.sceneId === activeSceneId);
-
-  const setScene = useCallback((sceneId: SubangSceneId) => {
-    setMode("all");
-    setSelectedId(null);
-    setPlaybackTime(0);
-    setActiveSceneId(sceneId);
-  }, []);
-
-  const stepScene = useCallback((direction: number) => {
-    const currentIndex = subangScenes.findIndex((scene) => scene.id === activeSceneId);
-    const nextIndex = (currentIndex + direction + subangScenes.length) % subangScenes.length;
-    setScene(subangScenes[nextIndex].id);
-  }, [activeSceneId, setScene]);
-
-  const handlePlaybackTimeChange = useCallback((time: number) => {
-    setPlaybackTime(time);
-  }, []);
 
   const openPlace = useCallback((id: string) => {
     setSelectedId(id);
@@ -312,40 +291,35 @@ export function Subang360Experience() {
         if (authModalOpen) closeAuthModal();
         else setSelectedId(null);
       }
-      if (event.key === "ArrowRight") {
+      if (event.key === "+" || event.key === "=") {
         event.preventDefault();
-        stepScene(1);
+        setZoomSignal((value) => value + 1);
       }
-      if (event.key === "ArrowLeft") {
+      if (event.key === "-") {
         event.preventDefault();
-        stepScene(-1);
+        setZoomSignal((value) => value - 1);
       }
-      if (event.key === " " && target?.tagName !== "BUTTON") {
-        event.preventDefault();
-        setVideoPaused((paused) => !paused);
-      }
-      if (event.key === "0") setRestartSignal((value) => value + 1);
+      if (event.key === "0") setResetSignal((value) => value + 1);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [authModalOpen, closeAuthModal, stepScene]);
+  }, [authModalOpen, closeAuthModal]);
 
   const setBrowseMode = (nextMode: BrowseMode) => {
     setMode(nextMode);
     setSelectedId(null);
-    const matchingPlace = nextMode === "all"
-      ? undefined
-      : nextMode === "favorites" || nextMode === "plan"
-        ? subangPlaces.find((place) => favorites.has(place.id))
-        : subangPlaces.find((place) => place.category === nextMode);
-    if (matchingPlace) {
-      setPlaybackTime(0);
-      setActiveSceneId(matchingPlace.sceneId);
-    }
   };
 
   return (
     <main className="subang360-shell">
+      <audio
+        ref={soundtrackRef}
+        src="/sounds/subang-360-soundtrack.mp3"
+        loop
+        preload="auto"
+        onPause={() => setAudioEnabled(false)}
+        onPlay={() => setAudioEnabled(true)}
+      />
       <aside className="subang360-sidebar" aria-label="Navigasi utama">
         <LogoMark />
         <nav className="subang360-nav">
@@ -399,54 +373,44 @@ export function Subang360Experience() {
       </aside>
 
       <section className="subang360-stage" aria-label="Panorama interaktif Subang">
-        <Subang360Scene
-          scene={activeScene}
-          muted={!audioEnabled}
-          paused={videoPaused || Boolean(selectedPlace)}
-          restartSignal={restartSignal}
-          onPlaybackTimeChange={handlePlaybackTimeChange}
-        >
-          <div className="subang360-shade" aria-hidden="true" />
-          <div className="subang360-hotspots" aria-label="Destinasi pada video">
-            {visiblePlaces.map((place) => {
-              const Icon = categoryIcons[place.category];
-              const meta = categoryMeta[place.category];
-              const active = selectedId === place.id;
-              const position = getMarkerPosition(place.markerTrack, playbackTime);
-              return (
-                <button
-                  type="button"
-                  key={place.id}
-                  className={`subang360-hotspot ${active ? "is-active" : ""}`}
-                  style={
-                    {
-                      "--hotspot-x": `${position.x}%`,
-                      "--hotspot-y": `${position.y}%`,
-                      "--hotspot-color": meta.color,
-                    } as CSSProperties
-                  }
-                  onClick={() => openPlace(place.id)}
-                  aria-label={`Buka detail ${place.title}`}
-                  aria-pressed={active}
-                >
-                  <span className="subang360-hotspot-icon"><Icon aria-hidden="true" /></span>
-                  {(place.featured || active) && (
-                    <span className="subang360-hotspot-label">{place.label ?? place.title}</span>
-                  )}
-                  <span className="subang360-hotspot-stem" aria-hidden="true" />
-                </button>
-              );
-            })}
-          </div>
-        </Subang360Scene>
+        <Subang360Scene zoomSignal={zoomSignal} resetSignal={resetSignal} />
+        <div className="subang360-shade" aria-hidden="true" />
+
+        <div className="subang360-hotspots" aria-label="Destinasi pada panorama">
+          {filteredPlaces.map((place) => {
+            const Icon = categoryIcons[place.category];
+            const meta = categoryMeta[place.category];
+            const active = selectedId === place.id;
+            const position = panoramaPositions[place.id] ?? place.markerTrack[0];
+            return (
+              <button
+                type="button"
+                key={place.id}
+                className={`subang360-hotspot ${active ? "is-active" : ""}`}
+                style={
+                  {
+                    "--hotspot-x": `${position.x}%`,
+                    "--hotspot-y": `${position.y}%`,
+                    "--hotspot-color": meta.color,
+                  } as CSSProperties
+                }
+                onClick={() => openPlace(place.id)}
+                aria-label={`Buka detail ${place.title}`}
+                aria-pressed={active}
+              >
+                <span className="subang360-hotspot-icon"><Icon aria-hidden="true" /></span>
+                {(place.featured || active) && (
+                  <span className="subang360-hotspot-label">{place.label ?? place.title}</span>
+                )}
+                <span className="subang360-hotspot-stem" aria-hidden="true" />
+              </button>
+            );
+          })}
+        </div>
 
         <header className="subang360-mobile-header">
           <LogoMark compact />
           <div className="subang360-mobile-actions">
-            <button type="button" title="Pilih bahasa" aria-label="Pilih bahasa">
-              <Languages />
-              <span>ID</span>
-            </button>
             <button
               type="button"
               onClick={toggleAudio}
@@ -461,16 +425,11 @@ export function Subang360Experience() {
 
         <div className="subang360-title-block">
           <h1>SUBANG 360</h1>
-          <p>{activeScene.subtitle}</p>
+          <p>Dari Pegunungan ke Pesisir</p>
           <span aria-hidden="true">◇</span>
         </div>
 
         <div className="subang360-top-controls">
-          <button type="button" title="Pilih bahasa" aria-label="Pilih bahasa">
-            <Languages aria-hidden="true" />
-            <span>ID</span>
-            <ChevronDown aria-hidden="true" />
-          </button>
           <button
             type="button"
             onClick={toggleAudio}
@@ -504,55 +463,36 @@ export function Subang360Experience() {
           </div>
         )}
 
-        <nav className="subang360-chapters" aria-label="Chapter Subang">
-          {subangScenes.map((scene, index) => (
-            <button
-              type="button"
-              key={scene.id}
-              className={scene.id === activeSceneId ? "is-active" : undefined}
-              onClick={() => setScene(scene.id)}
-              aria-current={scene.id === activeSceneId ? "true" : undefined}
-              title={scene.label}
-            >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{scene.shortLabel}</strong>
-            </button>
-          ))}
-        </nav>
+        <div className="subang360-instructions" aria-hidden="true">
+          <span><Hand /> Geser untuk menjelajah</span>
+          <span><Mouse /> Scroll untuk zoom</span>
+          <span><Compass /> Klik ikon untuk detail</span>
+        </div>
 
-        <div className="subang360-view-controls" aria-label="Kontrol video">
+        <div className="subang360-view-controls" aria-label="Kontrol panorama">
           <button
             type="button"
-            onClick={() => setRestartSignal((value) => value + 1)}
-            title="Putar dari awal (0)"
-            aria-label="Putar video dari awal"
+            onClick={() => setResetSignal((value) => value + 1)}
+            title="Reset pandangan (0)"
+            aria-label="Reset pandangan"
           >
             <RotateCcw />
           </button>
           <button
             type="button"
-            onClick={() => stepScene(-1)}
-            title="Chapter sebelumnya"
-            aria-label="Chapter sebelumnya"
+            onClick={() => setZoomSignal((value) => value + 1)}
+            title="Perbesar (+)"
+            aria-label="Perbesar"
           >
-            <ChevronLeft />
+            <Plus />
           </button>
           <button
             type="button"
-            onClick={() => setVideoPaused((paused) => !paused)}
-            title={videoPaused ? "Putar video" : "Jeda video"}
-            aria-label={videoPaused ? "Putar video" : "Jeda video"}
-            aria-pressed={videoPaused}
+            onClick={() => setZoomSignal((value) => value - 1)}
+            title="Perkecil (-)"
+            aria-label="Perkecil"
           >
-            {videoPaused ? <Play /> : <Pause />}
-          </button>
-          <button
-            type="button"
-            onClick={() => stepScene(1)}
-            title="Chapter berikutnya"
-            aria-label="Chapter berikutnya"
-          >
-            <ChevronRight />
+            <Minus />
           </button>
         </div>
 

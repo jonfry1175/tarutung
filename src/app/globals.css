@@ -330,36 +330,6 @@ a {
   inset: 0;
 }
 
-.subang360-video-stage {
-  overflow: hidden;
-  background: #07100e;
-}
-
-.subang360-video-plane {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  overflow: hidden;
-  background: #07100e;
-  background-position: center;
-  background-size: cover;
-  transform: translate(-50%, -50%);
-}
-
-.subang360-video-plane video {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  opacity: 1;
-}
-
-.subang360-video-plane video.is-ready {
-  opacity: 1;
-}
-
 .subang360-shade {
   position: absolute;
   z-index: 1;
@@ -568,7 +538,7 @@ a {
   outline-offset: 5px;
 }
 
-.subang360-chapters {
+.subang360-instructions {
   position: absolute;
   z-index: 10;
   bottom: 22px;
@@ -577,45 +547,31 @@ a {
   align-items: center;
   border: 1px solid rgba(231, 211, 172, 0.45);
   border-radius: 999px;
-  padding: 5px;
+  padding: 0 7px;
   background: rgba(8, 14, 14, 0.78);
   color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
   transform: translateX(-50%);
   backdrop-filter: blur(14px);
 }
 
-.subang360-chapters button {
-  display: grid;
-  height: 40px;
-  grid-template-columns: auto minmax(0, 1fr);
+.subang360-instructions span {
+  display: flex;
+  height: 42px;
   align-items: center;
-  gap: 7px;
-  border: 0;
-  border-radius: 999px;
-  padding: 0 13px;
-  color: rgba(255, 255, 255, 0.62);
-  background: transparent;
-  cursor: pointer;
+  gap: 8px;
+  padding: 0 18px;
   white-space: nowrap;
-  transition: color 160ms ease, background-color 160ms ease;
 }
 
-.subang360-chapters button:hover,
-.subang360-chapters button:focus-visible,
-.subang360-chapters button.is-active {
-  color: #fff;
-  background: rgba(49, 70, 59, 0.92);
+.subang360-instructions span + span {
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.subang360-chapters button span {
-  color: #d8bc84;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.subang360-chapters button strong {
-  font-size: 11px;
-  font-weight: 500;
+.subang360-instructions svg {
+  width: 18px;
+  height: 18px;
+  color: #f1e2c3;
 }
 
 .subang360-view-controls {
@@ -888,6 +844,7 @@ a {
 
   .subang360-sidebar,
   .subang360-top-controls,
+  .subang360-instructions,
   .subang360-mode-label {
     display: none;
   }
@@ -1006,35 +963,8 @@ a {
   }
 
   .subang360-view-controls button:nth-child(2),
-  .subang360-view-controls button:nth-child(4) {
+  .subang360-view-controls button:nth-child(3) {
     display: none;
-  }
-
-  .subang360-chapters {
-    right: 10px;
-    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 72px);
-    left: 10px;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    padding: 4px;
-    border-radius: 8px;
-    transform: none;
-  }
-
-  .subang360-chapters button {
-    display: flex;
-    min-width: 0;
-    height: 38px;
-    justify-content: center;
-    gap: 4px;
-    border-radius: 6px;
-    padding: 0 4px;
-  }
-
-  .subang360-chapters button strong {
-    overflow: hidden;
-    font-size: 9px;
-    text-overflow: ellipsis;
   }
 
   .subang360-category-dock {
@@ -1080,11 +1010,6 @@ a {
   }
 
   .subang360-stage:has(.subang360-detail) .subang360-category-dock {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .subang360-stage:has(.subang360-detail) .subang360-chapters {
     opacity: 0;
     pointer-events: none;
   }

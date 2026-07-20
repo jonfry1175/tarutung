@@ -10,7 +10,7 @@ Subang 360 is cinematic Indonesian destination storytelling with a quiet luxury 
 
 The visual language combines:
 
-- Cinematic, full-bleed photography and video.
+- Cinematic, full-bleed photography.
 - Deep forest-green surfaces instead of generic black or blue.
 - Restrained antique-gold accents for hierarchy and action.
 - Elegant serif display typography paired with precise sans-serif UI text.
@@ -113,7 +113,7 @@ Category colors are functional, not decorative. Use them only for markers, categ
 - Landing navigation is transparent over hero media with one subtle gold divider.
 - Desktop navigation is centered and sparse: Wisata, Kuliner, Budaya, Rencana.
 - Mobile navigation uses a 44px icon button and a compact dark menu.
-- Explorer desktop navigation uses a fixed left rail. Mobile uses top actions plus bottom category and chapter docks.
+- Explorer desktop navigation uses a fixed left rail. Mobile uses top actions plus a bottom category dock.
 
 ### Primary CTA
 
@@ -147,16 +147,16 @@ Category colors are functional, not decorative. Use them only for markers, categ
 - Marker color comes from the category token.
 - Desktop marker: circular icon, optional label, thin white stem, and precise anchor point.
 - Mobile marker: 40px icon-only target; hide labels to preserve the scene.
-- Marker position must be derived from the scene track and playback time, not guessed with static CSS.
-- If the camera or scene composition changes, update marker tracks as part of the same change.
-- Opening place detail pauses the scene so the marker and content relationship remains stable.
+- Marker position must use the panorama position data for the corresponding destination.
+- If the panorama composition changes, update marker positions as part of the same change.
+- Markers remain fixed to the panorama composition while users inspect destination details.
 
 ### Explorer Controls
 
 - Use familiar Lucide symbols with accessible labels and tooltips where needed.
 - Controls use translucent Explorer Ink, a thin warm border, and 4-8px radius.
 - Icon controls are 40-48px square with stable dimensions.
-- Chapters are compact segmented controls. Active state uses a lighter forest surface and gold micro label.
+- Panorama controls provide familiar reset and zoom actions.
 - Do not use text buttons when a familiar icon communicates the command.
 
 ### Detail Panels and Modals
@@ -207,7 +207,7 @@ Use an 8px-centered scale:
 
 ## 7. Media and Motion
 
-### Photography and Video
+### Photography
 
 - Prefer real Subang imagery. AI-generated imagery is acceptable only for missing content and must remain geographically and culturally plausible.
 - Show the actual place, dish, tradition, or experience; avoid generic stock atmosphere.
@@ -216,11 +216,10 @@ Use an 8px-centered scale:
 - Heroes use wide `16:9` or full-viewport media with clear focal points.
 - Apply a restrained dark overlay for text contrast; do not destroy scene detail.
 
-### Explorer Video Stability
+### Explorer Panorama Stability
 
-- Camera movement must remain locked or extremely subtle when location markers overlay the video.
-- Prefer natural motion: mist, clouds, foliage, water, light, and subtle human movement.
-- Avoid orbit, shake, aggressive zoom, reframing, or major parallax.
+- Keep destination markers aligned to the static panorama composition.
+- Pan and zoom must remain bounded so the panorama never exposes an empty canvas.
 - Marker alignment is a functional requirement, not a decorative preference.
 
 ### Motion Rules
@@ -249,7 +248,7 @@ Use an 8px-centered scale:
 - Minimum interactive target: 44x44px.
 - Hero remains immersive at approximately `92svh` with a safe minimum height.
 - Split editorial sections become one column; media should appear before text when it improves comprehension.
-- Explorer chapter and category docks must stay above safe-area insets.
+- Explorer category dock must stay above safe-area insets.
 - Hide lower-priority marker labels or markers when density would obscure the scene.
 - Detail content must fit within the viewport without covering every navigation exit.
 
@@ -260,7 +259,6 @@ Use an 8px-centered scale:
 - Use visible `:focus-visible` states; do not rely only on color.
 - Provide descriptive Indonesian alt text for meaningful images.
 - Decorative overlays and icons must be hidden from assistive technology.
-- Video must be muted for autoplay and include a poster fallback.
 - Navigation, details, and feedback states must remain keyboard accessible.
 - Content should address domestic visitors in clear Indonesian, avoiding exaggerated claims such as "the most luxurious" unless verifiable.
 
@@ -284,7 +282,7 @@ Use an 8px-centered scale:
 - Do not add gradients, floating orbs, SVG decoration, or glass effects for visual filler.
 - Do not use oversized marketing headings inside compact panels.
 - Do not place text where it obscures a destination focal point or explorer marker.
-- Do not animate the explorer camera independently from marker tracking.
+- Do not animate the explorer camera independently.
 - Do not use AI imagery that misrepresents Subang's geography, food, or culture.
 
 ## 11. Page Recipes
@@ -304,15 +302,15 @@ Use an 8px-centered scale:
 1. Full-viewport scene as the primary interface.
 2. Desktop sidebar or mobile navigation dock.
 3. Scene title and minimal contextual copy.
-4. Time-tracked category markers aligned to real objects.
-5. Compact video and chapter controls.
-6. Place detail panel that pauses the video and preserves an obvious exit.
+4. Category markers aligned to the panorama composition.
+5. Compact reset and zoom controls.
+6. Place detail panel with an obvious exit.
 
 ## 12. Agent Prompt Guide
 
 Use this condensed direction when delegating UI work:
 
-> Build for Subang 360 using a cinematic forest-and-gold Indonesian destination system. Use authentic full-bleed Subang photography, Cormorant Garamond display headings, Manrope UI text, deep forest surfaces, ivory copy, and restrained antique-gold actions. Keep page sections editorial and unframed, cards image-led with 3-4px radii, and controls compact and functional. Preserve explorer video-marker alignment, mobile safe areas, reduced motion, and 44px touch targets. Avoid generic rounded-card layouts, decorative gradients, fantasy travel imagery, and unrelated accent colors.
+> Build for Subang 360 using a cinematic forest-and-gold Indonesian destination system. Use authentic full-bleed Subang photography, Cormorant Garamond display headings, Manrope UI text, deep forest surfaces, ivory copy, and restrained antique-gold actions. Keep page sections editorial and unframed, cards image-led with 3-4px radii, and controls compact and functional. Preserve explorer panorama-marker alignment, mobile safe areas, reduced motion, and 44px touch targets. Avoid generic rounded-card layouts, decorative gradients, fantasy travel imagery, and unrelated accent colors.
 
 ## 13. Implementation Map and Change Protocol
 
@@ -324,7 +322,7 @@ Current implementation references:
 - Explorer styles: `src/app/globals.css`
 - Fonts: `src/app/layout.tsx`
 - Places, category colors, and scene metadata: `src/lib/subang-data.ts`
-- Scene/video renderer: `src/components/scene/subang-360-scene.tsx`
+- Panorama renderer: `src/components/scene/subang-360-scene.tsx`
 
 When changing the visual system:
 

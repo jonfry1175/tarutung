@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  ChevronDown,
   ChevronRight,
   Clock3,
   Landmark,
@@ -140,10 +139,6 @@ export function SubangLandingPage() {
                 </nav>
               </details>
             </div>
-            <details className={styles.languageMenu}>
-              <summary aria-label="Pilih bahasa"> ID <ChevronDown aria-hidden="true" /></summary>
-              <div><button type="button" aria-current="true">Indonesia</button></div>
-            </details>
           </div>
         </header>
 

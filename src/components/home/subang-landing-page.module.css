@@ -39,8 +39,9 @@
 
 .hero {
   position: relative;
-  min-height: 680px;
-  height: min(92svh, 900px);
+  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   isolation: isolate;
   overflow: hidden;
   background: url("/images/subang/video-posters/ciater-tea-plantation.webp") center 45% / cover no-repeat;

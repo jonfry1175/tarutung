@@ -13,6 +13,10 @@ This repository is a `Next.js 16` App Router project for the Tarutung city site 
 - `public/`: static assets
 - `output/`: manual QA artifacts; do not treat as source code
 
+## Design System
+
+Read `DESIGN.md` before any UI, layout, media, motion, or responsive work. Treat it as the canonical visual contract for both the landing page and the `/jelajahi` explorer; update it whenever a reusable design token or rule changes.
+
 ## Build, Test, and Development Commands
 
 - `pnpm dev`: start the app locally with webpack

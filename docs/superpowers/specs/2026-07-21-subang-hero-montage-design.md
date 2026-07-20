@@ -68,13 +68,13 @@ The 65 seconds of selected source material overlap by 8.75 seconds, producing a 
 ## Render Specification
 
 - Container and codec: MP4 with H.264 video.
-- Canvas: 1280×720, matching the current hero asset and the lowest-resolution sources.
+- Canvas: 1920×1080 to preserve detail when the full-viewport hero is scaled on desktop displays.
 - Frame rate: constant 24 fps.
 - Pixel format: `yuv420p` for broad browser compatibility.
-- Framing: aspect-preserving cover scale followed by a centered 1280×720 crop.
+- Framing: aspect-preserving cover scale followed by a centered 1920×1080 crop.
 - Audio: omitted entirely.
 - Streaming: MP4 metadata moved to the beginning with `+faststart`.
-- Compression: start with CRF 23 and a quality-oriented preset; adjust only if necessary to keep the final asset near or below 20 MB without obvious foliage breakup.
+- Compression: render directly from the source clips at CRF 20 with a quality-oriented preset, capped at 6 Mbps with a 12 Mbps buffer. Do not re-encode the completed montage a second time.
 - Transition: FFmpeg `xfade` using the standard fade curve.
 
 Source brightness and color will remain authentic. Minor normalization is permitted only where a transition produces a visibly jarring exposure jump; no stylized grade or artificial color palette will be introduced.
@@ -95,7 +95,7 @@ The existing `public/videos/subang/ciater-tea-plantation.mp4` remains unchanged 
 ## Known Source Constraints
 
 - Sari Ater is a 4:3 source and requires a 16:9 crop.
-- Capolaga and Pantai Cirewang are 720p sources; they should not be enlarged beyond the chosen output canvas.
+- Capolaga and Pantai Cirewang are 720p sources and therefore remain limited by their source detail when upscaled into the 1080p canvas.
 - Cileat, Capolaga, Sari Ater, and Pantai Pondok Bali contain visible baked-in source marks or watermarks.
 - Pantai Pondok Bali is busier than the other compositions, but it remains included because the approved design uses all 13 supplied videos.
 - Rights and production-use permission for downloaded footage must be confirmed by the project owner before public deployment.
@@ -111,5 +111,5 @@ The implementation is complete when:
 5. Hero text remains legible and important visual subjects are not consistently hidden by the lower-left text block.
 6. Reduced-motion users receive the new poster instead of autoplay video.
 7. Desktop and 390×844 mobile checks confirm acceptable cover cropping and no layout regression.
-8. The final file is visually acceptable at its web delivery size, with a target size at or below 20 MB.
+8. The final file is visually acceptable at its web delivery size, with a target size at or below 45 MB.
 9. `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass through the repository's configured Crabbox runner.

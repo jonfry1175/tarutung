@@ -4,7 +4,7 @@
 
 **Goal:** Build and integrate a muted, seamless-looping hero montage from the approved 5-second selections across all 13 Subang drone videos.
 
-**Architecture:** FFmpeg trims and normalizes each source into a 1280×720/24 fps stream, joins them with the approved adaptive `xfade` chain, and closes the timeline through a duplicate opening clip before trimming one circular cycle. The landing hero references the new MP4 and poster while retaining its existing reduced-motion behavior.
+**Architecture:** FFmpeg trims and normalizes each source into a 1920×1080/24 fps stream, joins them with the approved adaptive `xfade` chain, and closes the timeline through a duplicate opening clip before trimming one circular cycle. The landing hero references the new MP4 and poster while retaining its existing reduced-motion behavior.
 
 **Tech Stack:** FFmpeg 4.4, H.264/libx264, WebP, Next.js 16 App Router, React 19, TypeScript, pnpm, Crabbox.
 
@@ -12,7 +12,7 @@
 
 - Every source contributes exactly one continuous 5.000-second window from the approved design spec.
 - The final video has no audio stream and the `<video>` remains explicitly `muted`.
-- Output is MP4/H.264, 1280×720, constant 24 fps, `yuv420p`, and `+faststart`.
+- Output is MP4/H.264, 1920×1080, constant 24 fps, `yuv420p`, and `+faststart`.
 - Preserve `public/videos/subang/ciater-tea-plantation.mp4`; it remains destination content.
 - Preserve the existing autoplay, loop, inline-playback, metadata-preload, and reduced-motion behavior.
 - Do not remove or conceal baked-in source watermarks.
@@ -90,20 +90,20 @@ ffmpeg -y \
   -ss 00:01:02.000 -t 5 -i "$source_dir/Pantai_Cirewang_-_Subang_cinematic_vidio [LiHVa3gn1fM].mp4" \
   -ss 00:00:25.000 -t 5 -i "$source_dir/4K_Drone_-_Kebun_Teh_Ciater_Subang [anUUzg8ck1U].mp4" \
   -filter_complex "\
-[0:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v0];\
-[1:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v1];\
-[2:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v2];\
-[3:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v3];\
-[4:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v4];\
-[5:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v5];\
-[6:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v6];\
-[7:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v7];\
-[8:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v8];\
-[9:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v9];\
-[10:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v10];\
-[11:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v11];\
-[12:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v12];\
-[13:v]fps=24,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,setsar=1,setpts=PTS-STARTPTS[v13];\
+[0:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v0];\
+[1:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v1];\
+[2:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v2];\
+[3:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v3];\
+[4:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v4];\
+[5:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v5];\
+[6:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v6];\
+[7:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v7];\
+[8:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v8];\
+[9:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v9];\
+[10:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v10];\
+[11:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v11];\
+[12:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v12];\
+[13:v]fps=24,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,setpts=PTS-STARTPTS[v13];\
 [v0][v1]xfade=transition=fade:duration=0.70:offset=4.30[x1];\
 [x1][v2]xfade=transition=fade:duration=0.75:offset=8.55[x2];\
 [x2][v3]xfade=transition=fade:duration=0.65:offset=12.90[x3];\
@@ -122,7 +122,9 @@ ffmpeg -y \
   -an \
   -c:v libx264 \
   -preset slow \
-  -crf 23 \
+  -crf 20 \
+  -maxrate 6M \
+  -bufsize 12M \
   -pix_fmt yuv420p \
   -movflags +faststart \
   "$output"
@@ -140,11 +142,11 @@ ffmpeg -y \
   -i public/videos/subang/subang-hero-montage.mp4 \
   -frames:v 1 \
   -c:v libwebp \
-  -quality 82 \
+  -quality 88 \
   public/images/subang/video-posters/subang-hero-montage.webp
 ```
 
-Expected: FFmpeg exits 0 and creates a non-empty 1280×720 WebP poster.
+Expected: FFmpeg exits 0 and creates a non-empty 1920×1080 WebP poster.
 
 - [ ] **Step 4: Probe the technical contract**
 
@@ -163,14 +165,14 @@ Expected fields:
 ```text
 codec_name=h264
 codec_type=video
-width=1280
-height=720
+width=1920
+height=1080
 r_frame_rate=24/1
 pix_fmt=yuv420p
 duration=56.250000
 ```
 
-There must be no `codec_type=audio`, and `size` should be no more than 20,971,520 bytes. If the CRF 23 output exceeds that ceiling, rerun Step 2 with `-crf 24`, then repeat Steps 3–4.
+There must be no `codec_type=audio`, and `size` should be no more than 47,185,920 bytes. The montage must be rendered directly from the source clips without a second lossy encode.
 
 - [ ] **Step 5: Inspect transition boundaries and the loop boundary**
 

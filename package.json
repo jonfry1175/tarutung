@@ -29,6 +29,8 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@locator/runtime": "^0.5.1",
+    "@locator/webpack-loader": "^0.5.1",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^20",

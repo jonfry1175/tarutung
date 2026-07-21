@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { LocatorInit } from "@/components/locator-init";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
@@ -27,7 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${displayFont.variable} ${bodyFont.variable} h-full antialiased`}>
-      <body className="min-h-full bg-background text-foreground font-sans">{children}</body>
+      <body className="min-h-full bg-background text-foreground font-sans">
+        <LocatorInit />
+        {children}
+      </body>
     </html>
   );
 }

@@ -2,18 +2,23 @@ import {
   ArrowRight,
   ChevronRight,
   Clock3,
+  Compass,
   Landmark,
   MapPin,
   Menu,
+  Mountain,
   Route,
   Search,
   Share2,
   UsersRound,
+  Utensils,
+  Waves,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { LandingHeroMedia } from "@/components/home/landing-hero-media";
+import { SubangCulinarySection } from "@/components/home/subang-culinary-section";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import styles from "./subang-landing-page.module.css";
 
@@ -38,33 +43,6 @@ const destinations = [
   },
 ];
 
-const culinaryItems = [
-  {
-    title: "Nanas Subang",
-    description: "Manis segar, harum alami, dan menjadi kebanggaan Subang.",
-    image: "/images/subang/video-posters/subang-pineapple.webp",
-  },
-  {
-    title: "Sop Kikil Sapi",
-    description: "Kuah gurih kaya rempah yang menghangatkan setiap waktu.",
-    image: "/images/subang/landing/sop-kikil-subang.webp",
-  },
-  {
-    title: "Sate Maranggi",
-    description: "Empuk, berbumbu khas, dan dibakar hingga harum.",
-    image: "/images/subang/landing/sate-maranggi.webp",
-  },
-  {
-    title: "Tahu Susu",
-    description: "Lembut di dalam, renyah di luar, nikmatnya tiada tara.",
-    image: "/images/subang/landing/tahu-susu.webp",
-  },
-  {
-    title: "Nasi Liwet",
-    description: "Aroma gurih santan dengan lauk khas Sunda yang lengkap.",
-    image: "/images/subang/landing/nasi-liwet.webp",
-  },
-];
 
 const itineraries = [
   {
@@ -156,16 +134,77 @@ export function SubangLandingPage() {
         </a>
       </section>
 
-      <section id="tentang" className={styles.introSection}>
+      <section id="tentang" className={styles.introSection} aria-label="Selamat datang di Subang">
         <div className={styles.introCopy}>
-          <p className={styles.eyebrow}>Selamat datang di Subang</p>
-          <h2>Kemewahan yang<br />Tumbuh dari Alam</h2>
-          <p>Dari sejuknya pegunungan Ciater hingga ombak tenang Pantai Cirewang, Subang adalah harmoni antara alam, budaya, dan kehidupan lokal.</p>
-          <p>Nikmati perjalanan autentik, kuliner istimewa, dan tradisi yang terus hidup di setiap sudutnya.</p>
-          <a className={styles.textLink} href="#wisata">Tentang Subang <ChevronRight aria-hidden="true" /></a>
+          <div className={styles.introBadge}>
+            <Compass className={styles.badgeIcon} aria-hidden="true" />
+            <span className={styles.eyebrow}>Pesona Bentang Alam Subang</span>
+          </div>
+          <h2>Selamat datang di Subang,<br />Kemewahan Alam & Tradisi</h2>
+          <p className={styles.introLead}>
+            Dari sejuknya hamparan teh pegunungan Ciater hingga ketenangan ombak Pantai Cirewang, Subang menyajikan harmoni autentik antara alam, budaya, dan kehangatan lokal.
+          </p>
+
+          <div className={styles.pillarGrid}>
+            <div className={styles.pillarCard}>
+              <div className={styles.pillarHeader}>
+                <Mountain className={styles.pillarIcon} aria-hidden="true" />
+                <h4>Pegunungan & Hutan</h4>
+              </div>
+              <p>Udara sejuk Ciater, kawah purba, dan kesegaran air terjun tropis.</p>
+            </div>
+            <div className={styles.pillarCard}>
+              <div className={styles.pillarHeader}>
+                <Utensils className={styles.pillarIcon} aria-hidden="true" />
+                <h4>Cita Rasa Khas</h4>
+              </div>
+              <p>Manis autentik Nanas Madu, Sate Maranggi, dan kelezatan kuliner lokal.</p>
+            </div>
+            <div className={styles.pillarCard}>
+              <div className={styles.pillarHeader}>
+                <Waves className={styles.pillarIcon} aria-hidden="true" />
+                <h4>Muara & Pesisir</h4>
+              </div>
+              <p>Hutan mangrove Cirewang dan pantai tenang utara Jawa Barat.</p>
+            </div>
+          </div>
+
+          <div className={styles.introActions}>
+            <a className={styles.textLink} href="#wisata">
+              Jelajahi Destinasi <ChevronRight aria-hidden="true" />
+            </a>
+            <Link className={styles.secondaryBadgeButton} href="/jelajahi">
+              Subang 360 Explorer <ArrowRight aria-hidden="true" />
+            </Link>
+          </div>
         </div>
-        <div className={styles.introImage}>
-          <Image src="/images/subang/ciater-waterfall.png" alt="Air terjun di hutan tropis Subang" fill sizes="(max-width: 800px) 100vw, 54vw" />
+
+        <div className={styles.dualMediaContainer}>
+          <div className={styles.mainMediaWrapper}>
+            <Image
+              src="/images/subang/ciater-waterfall.png"
+              alt="Air terjun di hutan tropis Subang"
+              fill
+              sizes="(max-width: 800px) 100vw, 50vw"
+            />
+            <div className={styles.mainMediaGradient} aria-hidden="true" />
+          </div>
+          
+          <div className={styles.floatingPreviewCard}>
+            <div className={styles.floatingImageWrapper}>
+              <Image
+                src="/images/subang/video-posters/subang-north-coast.webp"
+                alt="Pesisir Laut Utara Subang"
+                fill
+                sizes="180px"
+              />
+            </div>
+            <div className={styles.floatingContent}>
+              <span className={styles.floatingTag}>Bentang Alam</span>
+              <strong className={styles.floatingTitle}>Pegunungan s.d. Pesisir</strong>
+              <small className={styles.floatingSubtitle}>Elevasi 0 — 1.500m mdpl</small>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -201,23 +240,7 @@ export function SubangLandingPage() {
         </Link>
       </section>
 
-      <section id="kuliner" className={styles.culinarySection}>
-        <div className={styles.sectionHeading}>
-          <p className={styles.eyebrow}>Kuliner Subang</p>
-          <h2>Rasa yang Menggoda</h2>
-        </div>
-        <div className={styles.culinaryGrid}>
-          {culinaryItems.map((item) => (
-            <article key={item.title} className={styles.culinaryCard}>
-              <div className={styles.culinaryImage}>
-                <Image src={item.image} alt={item.title} fill sizes="(max-width: 640px) 50vw, 20vw" />
-              </div>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <SubangCulinarySection />
 
       <section id="budaya" className={styles.cultureSection}>
         <div className={styles.cultureCopy}>
@@ -265,7 +288,7 @@ export function SubangLandingPage() {
         <div className={styles.footerBrand}>
           <Brand />
           <p>Platform untuk menjelajahi wisata, kuliner, budaya, dan keramahan Kabupaten Subang.</p>
-          <a href="/jelajahi" aria-label="Bagikan pengalaman Subang 360"><Share2 aria-hidden="true" /></a>
+          <a className={styles.footerShare} href="/jelajahi" aria-label="Bagikan pengalaman Subang 360"><Share2 aria-hidden="true" /></a>
         </div>
         <div>
           <h3>Jelajahi</h3>

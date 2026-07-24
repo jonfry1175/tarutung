@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ChevronRight, Flame, MapPin, Sparkles, Utensils } from "lucide-react";
+import { ArrowRight, Flame, MapPin, Sparkles, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -108,7 +108,7 @@ export function SubangCulinarySection() {
   );
 
   const activeDish =
-    culinaryItems.find((item) => item.id === activeDishId) || culinaryItems[0];
+    filteredDishes.find((item) => item.id === activeDishId) || filteredDishes[0] || culinaryItems[0];
 
   return (
     <section id="kuliner" className={styles.culinarySection} aria-labelledby="kuliner-heading">
@@ -125,17 +125,20 @@ export function SubangCulinarySection() {
         </div>
 
         {/* Category Filter Tabs */}
-        <div className={styles.filterBar} role="tablist" aria-label="Kategori Kuliner">
+        <div className={styles.filterBar} role="group" aria-label="Filter kategori kuliner">
           {filterCategories.map((cat) => {
             const isActive = activeFilter === cat.id;
             return (
               <button
                 key={cat.id}
                 type="button"
-                role="tab"
-                aria-selected={isActive}
+                aria-pressed={isActive}
                 className={`${styles.filterTab} ${isActive ? styles.filterTabActive : ""}`}
-                onClick={() => setActiveFilter(cat.id)}
+                onClick={() => {
+                  setActiveFilter(cat.id);
+                  const nextDish = culinaryItems.find((item) => cat.id === "all" || item.category === cat.id);
+                  if (nextDish) setActiveDishId(nextDish.id);
+                }}
               >
                 {cat.id === "ikonik" && <Sparkles className={styles.tabIcon} aria-hidden="true" />}
                 {cat.id === "utama" && <Flame className={styles.tabIcon} aria-hidden="true" />}
@@ -195,31 +198,16 @@ export function SubangCulinarySection() {
         </div>
       </div>
 
-      {/* Interactive Cards Grid */}
-      <div className={styles.culinaryGridContainer}>
-        <div className={styles.gridHeader}>
-          <h3>Pilihan Hidangan Khas ({filteredDishes.length})</h3>
-          <span className={styles.gridHint}>Klik hidangan untuk melihat detail rasa</span>
-        </div>
-
-        <div className={styles.culinaryGrid}>
+      <div className={styles.culinaryFilmstrip} aria-label="Pilihan hidangan khas">
           {filteredDishes.map((item) => {
             const isSelected = item.id === activeDish.id;
             return (
-              <article
+              <button
                 key={item.id}
+                type="button"
                 className={`${styles.culinaryCard} ${isSelected ? styles.culinaryCardActive : ""}`}
                 onClick={() => setActiveDishId(item.id)}
-                tabIndex={0}
-                role="button"
                 aria-pressed={isSelected}
-                aria-label={`Pilih ${item.title}`}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setActiveDishId(item.id);
-                  }
-                }}
               >
                 <div className={styles.culinaryImage}>
                   <Image
@@ -242,15 +230,13 @@ export function SubangCulinarySection() {
                   <p>{item.description}</p>
                   <div className={styles.cardFooter}>
                     <span className={styles.cardOrigin}>{item.origin}</span>
-                    <span className={styles.selectHint}>
-                      Detail <ChevronRight className={styles.chevronIcon} aria-hidden="true" />
-                    </span>
+                    <span className={styles.selectHint}>Pilih hidangan</span>
                   </div>
                 </div>
-              </article>
+              </button>
             );
           })}
-        </div>
+        <Link className={styles.textLink} href="/jelajahi?category=kuliner">Lihat semua kuliner <ArrowRight aria-hidden="true" /></Link>
       </div>
     </section>
   );

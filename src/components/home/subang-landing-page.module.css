@@ -1627,3 +1627,114 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Editorial redesign */
+.introSection {
+  grid-template-columns: 42% 58%;
+  min-height: 760px;
+}
+
+.introIndex {
+  width: min(100%, 620px);
+  margin-top: 34px;
+  border-top: 1px solid rgba(226, 200, 143, 0.34);
+}
+
+.indexRow {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 18px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(226, 200, 143, 0.24);
+}
+
+.indexNumber { color: var(--gold-light); font-size: 11px; letter-spacing: 0.14em; font-weight: 700; }
+.indexRow h3 { margin: 0; font-size: 22px; font-weight: 500; }
+.indexRow p { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.introActions .primaryButton { margin-top: 0; }
+
+.explorerSection {
+  display: block;
+  min-height: 720px;
+  padding: 0;
+  background: #061713;
+}
+
+.explorerPanorama {
+  position: relative;
+  display: block;
+  min-height: 720px;
+  overflow: hidden;
+}
+
+.explorerPanorama img { object-fit: cover; transition: transform 700ms ease; }
+.explorerPanorama:hover img { transform: scale(1.02); }
+.explorerStoryPanel {
+  position: absolute;
+  left: max(24px, calc((100vw - 1420px) / 2));
+  bottom: 44px;
+  z-index: 2;
+  width: min(430px, calc(100% - 48px));
+  padding: 28px;
+  background: rgba(6, 27, 22, 0.94);
+  border-left: 2px solid var(--gold);
+}
+.explorerStoryPanel h2 { margin-top: 12px; font-size: clamp(48px, 6vw, 80px); }
+.explorerStoryPanel > p:not(.eyebrow) { margin-top: 14px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.explorerStoryPanel .primaryButton { margin-top: 20px; }
+.explorerHints { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.explorerHints span { min-height: 32px; padding: 8px 10px; border: 1px solid rgba(255,255,255,.35); color: var(--muted); font-size: 10px; }
+
+.culinarySection { padding-top: 82px; padding-bottom: 82px; background: #061b16; }
+.spotlightContainer { margin-bottom: 30px; border: 0; padding: 0; background: transparent; box-shadow: none; }
+.culinaryFilmstrip { display: flex; align-items: stretch; gap: 12px; overflow-x: auto; padding: 8px 0 14px; scrollbar-width: thin; }
+.culinaryFilmstrip .culinaryCard { min-width: 190px; flex: 0 0 190px; border: 1px solid rgba(199,162,91,.2); background: var(--forest-soft); text-align: left; }
+.culinaryFilmstrip .culinaryCard { padding: 0; appearance: none; font: inherit; color: inherit; cursor: pointer; }
+.culinaryFilmstrip .culinaryImage { aspect-ratio: 4 / 3; }
+.culinaryFilmstrip .cardInfo { padding: 12px; }
+.culinaryFilmstrip .culinaryCard h3 { font-size: 16px; }
+.culinaryFilmstrip .culinaryCard > .cardInfo > p, .culinaryFilmstrip .cardFooter { display: none; }
+.culinaryFilmstrip > .textLink { flex: 0 0 auto; align-self: center; min-height: 44px; padding: 12px 4px; }
+
+.itinerarySection { position: relative; }
+.journeyTrack { position: relative; display: block; width: 72%; height: 40px; margin: 0 0 -20px 14%; }
+.journeyTrack::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(199,162,91,.55); }
+.journeyTrack span { position: absolute; top: 50%; z-index: 1; display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--gold); border-radius: 50%; color: var(--gold-light); background: #071d17; font-size: 10px; font-weight: 700; transform: translateX(-50%) translateY(-50%); }
+.journeyTrack span:nth-child(1) { left: 0%; }
+.journeyTrack span:nth-child(2) { left: 50%; }
+.journeyTrack span:nth-child(3) { left: 100%; }
+.itineraryGrid { position: relative; grid-template-columns: 28fr 44fr 28fr; align-items: start; }
+.itineraryCard { position: relative; display: grid; grid-template-columns: 42px 1fr; column-gap: 14px; }
+.journeyRoute .itineraryCard { display: block; }
+.journeyRoute .routeColumn { display: none; }
+.itineraryCard > :not(.routeColumn) { grid-column: 2; }
+.routeColumn { position: relative; z-index: 2; grid-column: 1; grid-row: 1 / span 4; display: flex; justify-content: center; }
+.routeMarker { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--gold); border-radius: 50%; color: var(--gold-light); background: #071d17; font-size: 11px; font-weight: 700; }
+.itineraryCard:nth-child(2),
+.itineraryCard:nth-child(3) { margin-top: 0; }
+.itineraryCard h3 { position: relative; z-index: 1; }
+
+.textLink, .footer a { min-height: 44px; padding-top: 12px; padding-bottom: 12px; }
+.footerShare { width: 44px; height: 44px; }
+
+@media (max-width: 760px) {
+  .introSection { grid-template-columns: 1fr; min-height: auto; }
+  .introIndex { margin-top: 26px; }
+  .explorerPanorama { min-height: 620px; }
+  .explorerStoryPanel { left: 20px; bottom: 20px; width: calc(100% - 40px); padding: 22px; }
+  .explorerStoryPanel .primaryButton { width: 100%; }
+  .journeyTrack { display: none; }
+  .itineraryGrid { grid-template-columns: 1fr; gap: 40px; }
+  .journeyRoute .itineraryCard { padding-left: 56px; }
+  .journeyRoute .itineraryCard:not(:last-child)::after { content: ""; position: absolute; top: 38px; bottom: -40px; left: 20px; width: 1px; background: rgba(199,162,91,.55); }
+  .journeyRoute .routeColumn { position: absolute; top: 0; left: 0; display: flex; width: 42px; height: 38px; }
+  .itineraryCard { grid-template-columns: 42px 1fr; }
+  .itineraryCard:nth-child(2), .itineraryCard:nth-child(3) { margin-top: 0; }
+  .itineraryCard h3 { gap: 10px; }
+  .heroContent h1 { max-width: 340px; text-wrap: pretty; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explorerPanorama img,
+  .explorerPanorama:hover img { transform: none; transition: none; }
+}

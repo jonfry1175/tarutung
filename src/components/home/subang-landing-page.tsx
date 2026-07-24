@@ -6,13 +6,10 @@ import {
   Landmark,
   MapPin,
   Menu,
-  Mountain,
   Route,
   Search,
   Share2,
   UsersRound,
-  Utensils,
-  Waves,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,6 +63,12 @@ const itineraries = [
     icon: UsersRound,
     href: "/jelajahi?scene=coast",
   },
+];
+
+const landscapeIndex = [
+  { number: "01", title: "Pegunungan & Hutan", description: "Udara sejuk Ciater, kawah purba, dan kesegaran air terjun tropis." },
+  { number: "02", title: "Cita Rasa Khas", description: "Manis autentik Nanas Madu, Sate Maranggi, dan kelezatan kuliner lokal." },
+  { number: "03", title: "Muara & Pesisir", description: "Hutan mangrove Cirewang dan pantai tenang utara Jawa Barat." },
 ];
 
 function Brand() {
@@ -145,37 +148,20 @@ export function SubangLandingPage() {
             Dari sejuknya hamparan teh pegunungan Ciater hingga ketenangan ombak Pantai Cirewang, Subang menyajikan harmoni autentik antara alam, budaya, dan kehangatan lokal.
           </p>
 
-          <div className={styles.pillarGrid}>
-            <div className={styles.pillarCard}>
-              <div className={styles.pillarHeader}>
-                <Mountain className={styles.pillarIcon} aria-hidden="true" />
-                <h4>Pegunungan & Hutan</h4>
+          <div className={styles.introIndex} aria-label="Tiga wajah Subang">
+            {landscapeIndex.map((item) => (
+              <div key={item.number} className={styles.indexRow} data-index-number={item.number}>
+                <span className={styles.indexNumber}>{item.number}</span>
+                <div><h3>{item.title}</h3><p>{item.description}</p></div>
               </div>
-              <p>Udara sejuk Ciater, kawah purba, dan kesegaran air terjun tropis.</p>
-            </div>
-            <div className={styles.pillarCard}>
-              <div className={styles.pillarHeader}>
-                <Utensils className={styles.pillarIcon} aria-hidden="true" />
-                <h4>Cita Rasa Khas</h4>
-              </div>
-              <p>Manis autentik Nanas Madu, Sate Maranggi, dan kelezatan kuliner lokal.</p>
-            </div>
-            <div className={styles.pillarCard}>
-              <div className={styles.pillarHeader}>
-                <Waves className={styles.pillarIcon} aria-hidden="true" />
-                <h4>Muara & Pesisir</h4>
-              </div>
-              <p>Hutan mangrove Cirewang dan pantai tenang utara Jawa Barat.</p>
-            </div>
+            ))}
           </div>
 
           <div className={styles.introActions}>
             <a className={styles.textLink} href="#wisata">
               Jelajahi Destinasi <ChevronRight aria-hidden="true" />
             </a>
-            <Link className={styles.secondaryBadgeButton} href="/jelajahi">
-              Subang 360 Explorer <ArrowRight aria-hidden="true" />
-            </Link>
+            <Link className={styles.primaryButton} href="/jelajahi">Masuk ke Subang 360 <ArrowRight aria-hidden="true" /></Link>
           </div>
         </div>
 
@@ -185,7 +171,7 @@ export function SubangLandingPage() {
               src="/images/subang/ciater-waterfall.png"
               alt="Air terjun di hutan tropis Subang"
               fill
-              sizes="(max-width: 800px) 100vw, 50vw"
+              sizes="(max-width: 800px) 100vw, 58vw"
             />
             <div className={styles.mainMediaGradient} aria-hidden="true" />
           </div>
@@ -228,16 +214,15 @@ export function SubangLandingPage() {
       </section>
 
       <section className={styles.explorerSection} aria-labelledby="explorer-title">
-        <div className={styles.explorerBackdrop} aria-hidden="true" />
-        <div className={styles.explorerCopy}>
-          <p className={styles.eyebrow}>Pengalaman interaktif</p>
-          <h2 id="explorer-title">Subang 360</h2>
-          <p>Kabut di dataran tinggi, cerita di setiap sudut. Temukan destinasi, budaya, dan keindahan yang siap kamu kunjungi.</p>
+        <Link className={styles.explorerPanorama} href="/jelajahi" aria-label="Buka pengalaman Subang 360">
+          <Image src="/images/subang/landing/subang-360-preview.webp" alt="Tampilan interaktif Subang 360" fill sizes="100vw" />
+        </Link>
+        <div className={styles.explorerStoryPanel}>
+          <p className={styles.eyebrow}>Pengalaman interaktif</p><h2 id="explorer-title">Subang 360</h2>
+          <p>Kabut di dataran tinggi, cerita di setiap sudut. Temukan destinasi yang siap kamu kunjungi.</p>
+          <div className={styles.explorerHints} aria-label="Petunjuk interaksi"><span>Geser panorama</span><span>Pilih destinasi</span></div>
           <Link className={styles.primaryButton} href="/jelajahi">Masuk ke Subang 360 <ArrowRight aria-hidden="true" /></Link>
         </div>
-        <Link className={styles.explorerPreview} href="/jelajahi" aria-label="Buka pengalaman Subang 360">
-          <Image src="/images/subang/landing/subang-360-preview.webp" alt="Tampilan interaktif Subang 360" fill sizes="(max-width: 900px) 92vw, 58vw" />
-        </Link>
       </section>
 
       <SubangCulinarySection />
@@ -260,15 +245,19 @@ export function SubangLandingPage() {
           <p className={styles.eyebrow}>Rencana perjalanan</p>
           <h2>Pilihan Perjalanan untuk Anda</h2>
         </div>
-        <div className={styles.itineraryGrid}>
-          {itineraries.map((item) => {
+            <div className={`${styles.journeyTrack} ${styles.journeyRoute}`} aria-hidden="true">
+              <span>01</span><span>02</span><span>03</span>
+            </div>
+                    <div className={`${styles.itineraryGrid} ${styles.journeyRoute}`}>
+                  {itineraries.map((item, index) => {
             const Icon = item.icon;
             return (
-              <article key={item.title} className={styles.itineraryCard}>
+                      <article key={item.title} className={styles.itineraryCard} data-chapter={item.title}>
+                    <div className={styles.routeColumn}><span className={styles.routeMarker}>{String(index + 1).padStart(2, "0")}</span></div>
                 <Link className={styles.itineraryImage} href={item.href} aria-label={`Lihat rencana ${item.title}`}>
                   <Image src={item.image} alt={`Perjalanan ${item.title} di Subang`} fill sizes="(max-width: 760px) 100vw, 33vw" />
                 </Link>
-                <h3><Icon aria-hidden="true" />{item.title}</h3>
+                        <h3><Icon aria-hidden="true" />{item.title}</h3>
                 <p>{item.description}</p>
                 <Link className={styles.textLink} href={item.href}>Lihat Rencana <ChevronRight aria-hidden="true" /></Link>
               </article>
